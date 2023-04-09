@@ -1,0 +1,60 @@
+.mainform-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #1f263d;
+    font-family: Lato, sans-serif;
+    font-size: 12px;
+    background-color: #0f1114;
+    padding: 8px 20px;
+    display: -webkit-flex;
+}
+
+.mainform-container span {
+    display: inline-block;
+    position: relative;
+    font-size: 16px;
+    color: #fff;
+}
+
+.mainform-container button {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 10px;
+    background-color: #3858e7;
+    border-color: #3858e7;
+    min-height: 33px;
+    margin: 0!important;
+}
+
+.mainform-container  button:hover {
+    filter: brightness(.88);
+}
+
+.mainform-container form {
+    display: flex;
+    gap: 10px;
+}
+
+.mainform-container .form input{
+    background: #252b45;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    box-shadow: none;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 400;
+    transition: .2s;
+    height: 33px;
+    width: 320px;
+    color: #fff;
+    padding: 4px 8px;
+}
+
+.mainform-container .form input:focus {
+    border: none;
+    border-bottom: 1px solid #252b45;
+    opacity: 1;
+    box-shadow: none;
+    transition: none;
+}

@@ -1,0 +1,16 @@
+button {
+    transition: background-color 300ms;
+    background: #687396;
+    border: 1px solid #8e97b1;
+}
+
+button:hover {
+    background: #5e6887;
+}
+
+.btn-container {
+    position: absolute;
+    top: 0;
+    z-index: 4;
+    padding: 10px;
+}

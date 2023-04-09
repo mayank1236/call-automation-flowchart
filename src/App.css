@@ -1,0 +1,10 @@
+.container {
+    padding: 20px;
+}
+
+.flowchart {
+    height: 90vh;
+    overflow: hidden;
+    border: 1px solid black;
+    position: relative;
+}

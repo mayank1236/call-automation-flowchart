@@ -1,0 +1,89 @@
+.form-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-height: 100%;
+    height: 100%;
+    width: 405px;
+    box-sizing: border-box;
+    z-index: 3;
+    overflow: auto;
+    background: #1f263d;
+    box-shadow: -1px 0px 6px 0px #030303;
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: #2c2f3a;
+    z-index: 4;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    background: #0f1114;
+    font-size: 1rem;
+    padding: 1rem;
+    color: white;
+    align-items: center;
+}
+
+.form-header button {
+    margin: 0;
+}
+
+.form-header .form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.form-name {
+    font-family: Lato,sans-serif;
+    text-transform: capitalize;
+}
+
+.form-content {
+    padding: 1rem;
+    color: white;
+}
+
+.form-content label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+    text-transform: capitalize;
+    font-family: Lato,sans-serif;
+    font-size: 12px;
+}
+
+.field-container {
+    margin-bottom: 1rem;
+}
+
+.small-field-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+}
+
+.field {
+    position: relative;
+    padding-bottom: 0.75rem;
+    flex: 1;
+}
+
+.field input, .field select {
+    background: #3e4464 !important;
+    border: 1px solid #3e4464;
+    border-radius: 0.3rem;
+    text-align: left;
+    line-height: inherit;
+    width: 100%;
+    box-shadow: none;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 400;
+    transition: .2s;
+    height: 33px;
+    color: white;
+    padding: 5px 8px;
+}

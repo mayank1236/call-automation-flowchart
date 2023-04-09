@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+:root {
+    --dial-color: rgb(82, 190, 128);
+    --hangup-color: rgb(230, 126, 34);
+    --menu-color: rgb(0, 62, 112);
+    --router-color: rgb(131, 134, 133);
+    --gather-color: rgb(131, 134, 133);
+    --goto-color: rgb(131, 134, 133);
+    --hours-color: rgb(154, 200, 213);
+    --pixel-color: rgb(154, 200, 213);
+    --play-color: rgb(136, 78, 160);
+    --voicemail-color: rgb(136, 78, 160);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-y: hidden;
+    background-color: #1f263d;
+}
+
+button {
+    text-align: center;
+    padding: 0.5rem 1.2rem;
+    border-radius: 1px;
+    margin: 0 0.5rem 0.5rem 0;
+    color: white;
+    font-size: 0.75rem;
+    letter-spacing: .25px;
+    text-transform: capitalize;
+    cursor: pointer;
+}
