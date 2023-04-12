@@ -79,13 +79,13 @@ function NodeProvider({ children }: Props) {
         name: 'Inbound Call',
         color: 'rgb(0,192,255)',
     });
+    mainNode.setPosition(100, 350);
     mainNode
         .addOutPort('')
         .setMaximumLinks(1);
 
     const [nodes, setNodes] = useState<{}[]>([mainNode]);
     var [id, setId] = useState<number>(0);
-    let pos = [400, 300];
 
     const contextValue = {
         engine,
@@ -205,7 +205,9 @@ function NodeProvider({ children }: Props) {
         const inPort = n.addInPort('');
         inPort.setMaximumLinks(1);
         inPort.setLocked(true);
-        n.setPosition(pos[0], pos[1]);
+        const allNodes = model.getNodes();
+        const nodePos = allNodes[allNodes.length - 1].getPosition();
+        n.setPosition(nodePos.x + 250, nodePos.y);
 
         setNodes(nodes => [...nodes, n]);
         setId(id => id + 1);
