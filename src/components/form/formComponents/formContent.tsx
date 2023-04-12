@@ -7,7 +7,7 @@ interface formTypesObj {
     [key: string]: any
 }
 
-const FormContent = ({formId}: {formId: number}) => {
+const FormContent = ({ formId }: { formId: number }) => {
     const [att, setAtt] = useState('');
     let elements: any[];
     const [checked, setChecked] = useState(false);
@@ -106,35 +106,35 @@ const FormContent = ({formId}: {formId: number}) => {
         setAtt(elementName);
     }, [formId]);
 
-    
 
-  if(att.length > 0) {
-    return (
-        <div className="form-content">
-            {
-                formType[att] && 
-                Object.keys(formType[att]).map((key) => {
-                    // console.log(key)
-                    switch(key) {
-                        case 'split':
-                            return (<SmallFields key={key} obj={formType[att][key]} />);
-                        case 'toggle':
-                            return (<Toggle 
-                                key={key}
-                                checked={checked}
-                                onChange={setChecked}
-                                name={formType[att][key]} 
-                            />)
-                        default:
-                            return (<MainField key={key} formType={formType[att][key]} name={key} />)
-                    }
-                }) 
-            }
-        </div>
-      )
-  } else {
-    return <></>
-  }
+
+    if (att.length > 0) {
+        return (
+            <form className="form-content">
+                {
+                    formType[att] &&
+                    Object.keys(formType[att]).map((key) => {
+                        // console.log(key)
+                        switch (key) {
+                            case 'split':
+                                return (<SmallFields key={key} obj={formType[att][key]} />);
+                            case 'toggle':
+                                return (<Toggle
+                                    key={key}
+                                    checked={checked}
+                                    onChange={setChecked}
+                                    name={formType[att][key]}
+                                />)
+                            default:
+                                return (<MainField key={key} formType={formType[att][key]} name={key} />)
+                        }
+                    })
+                }
+            </form>
+        )
+    } else {
+        return <></>
+    }
 }
 
 export default FormContent

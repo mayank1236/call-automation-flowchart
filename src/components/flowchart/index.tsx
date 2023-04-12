@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { RefObject, useContext, useEffect, useRef, useState } from 'react'
 
 import {
   CanvasWidget
@@ -10,19 +10,37 @@ import { FormContext } from '../../context/form';
 
 // The FlowChart Component
 const FlowChart = () => {
+  // const canvas = document.querySelector('.canvas')
+  const [zoomLevel, setZoomLevel] = useState(100);
   let pos: {
     x: number;
     y: number;
   };
+
   const nodeObj = useContext(NodeContext);
   const engine = nodeObj?.engine;
   const model = nodeObj?.model;
-
   const formObj = useContext(FormContext);
+
+  const handleZoomIn = (e: any) => {
+    if (zoomLevel < 300) {
+      setZoomLevel(model.getZoomLevel() + 20);
+    }
+  };
+
+  const handleZoomOut = (e: any) => {
+    if (zoomLevel > 20) {
+      setZoomLevel(model.getZoomLevel() - 20);
+    }
+  };
 
   nodeObj?.nodes.forEach((node) => {
     model.addNode(node);
   });
+
+  useEffect(() => {
+    model.setZoomLevel(zoomLevel);
+  }, [zoomLevel])
 
   useEffect(() => {
     const elements = [...document.querySelectorAll('.node')];
@@ -30,7 +48,7 @@ const FlowChart = () => {
     const onMouseDown = (e: any) => {
       let i: number;
       elements.forEach((el, index) => {
-        if(e.currentTarget == el) {
+        if (e.currentTarget == el) {
           i = index
           pos = nodeObj?.nodes[i].getPosition();
         }
@@ -42,10 +60,10 @@ const FlowChart = () => {
       let i: number;
       let currentPos;
       elements.forEach((el, index) => {
-        if(e.currentTarget == el) {
+        if (e.currentTarget == el) {
           i = index
           currentPos = nodeObj?.nodes[i].getPosition();
-          if(currentPos && (currentPos['x'] == pos['x'] || currentPos['y'] == pos['y'])) {
+          if (currentPos && (currentPos['x'] == pos['x'] || currentPos['y'] == pos['y'])) {
             formObj?.openForm(i)
             return;
           }
@@ -59,7 +77,7 @@ const FlowChart = () => {
         element.addEventListener('mouseup', onMouseUp);
       });
     };
-  
+
     const removeListeners = () => {
       elements.forEach((element, i) => {
         element.removeEventListener('mousedown', onMouseDown);
@@ -78,7 +96,13 @@ const FlowChart = () => {
 
   engine.setModel(model);
   return (
-    <CanvasWidget className="canvas" engine={engine} />
+    <>
+      <div className="zoom-wrap">
+        <button className="zoom" onClick={handleZoomIn}>+</button>
+        <button className="zoom" onClick={handleZoomOut}>-</button>
+      </div>
+      <CanvasWidget className="canvas" engine={engine} />
+    </>
   )
 }
 

@@ -5,6 +5,16 @@
     background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 0h8v8H0V0zm8 8h8v8H8V8zm0-8h8v8H8V0z" fill-opacity=".1"/></svg>');
 }
 
+.zoom-wrap {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
 /* Container of heading of nodes */
 .css-lldskh {
     align-items: center;
@@ -26,17 +36,18 @@
 }
 
 /* Body of Node */
-.css-1tdkxnz, .css-gyedwv {
+.css-1tdkxnz,
+.css-gyedwv {
     background: #16191e;
-    border: none!important;
-    border-radius: 0.4rem!important;
+    border: none !important;
+    border-radius: 0.4rem !important;
     box-shadow: 0px 0px 6px 0px #030303;
     color: var(--component-call-flows__node-color);
     cursor: pointer;
     display: flex;
     flex-direction: column;
     height: 150px;
-    overflow-y: hidden!important;
+    overflow-y: hidden !important;
     position: absolute;
     width: 190px;
 }
@@ -59,83 +70,101 @@
 }
 
 /* In Port Styling */
- .css-14ytlrw, 
- .css-14ytlrw .css-18bh293:first-child, 
- .css-14ytlrw .css-18bh293:first-child .css-15hws1x,
- .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port {
+.css-14ytlrw,
+.css-14ytlrw .css-18bh293:first-child,
+.css-14ytlrw .css-18bh293:first-child .css-15hws1x,
+.css-14ytlrw .css-18bh293:first-child .css-15hws1x .port {
     height: 120%;
- }
+}
 
- .css-14ytlrw .css-18bh293:first-child {
+.css-14ytlrw .css-18bh293:first-child {
     position: absolute;
     top: 0;
     left: 0;
- }
+}
 
- .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+.css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     height: 100%;
- }
+}
 
 /* Styling Each Type of Node */
 
-[data-default-node-name="Dial"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+[data-default-node-name="Dial"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--dial-color);
 }
-[data-default-node-name="Hangup"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Hangup"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--hangup-color);
 }
-[data-default-node-name="Menu"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Menu"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--menu-color);
 }
-[data-default-node-name="Router"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Router"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--router-color);
 }
-[data-default-node-name="Gather"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Gather"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--gather-color);
 }
-[data-default-node-name="Go To"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Go To"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--goto-color);
 }
-[data-default-node-name="Hours"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Hours"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--hours-color);
 }
-[data-default-node-name="Pixel"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Pixel"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--pixel-color);
 }
-[data-default-node-name="Play"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Play"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--play-color);
 }
-[data-default-node-name="Voicemail"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7{
+
+[data-default-node-name="Voicemail"] .css-14ytlrw .css-18bh293:first-child .css-15hws1x .port .css-11bc0l7 {
     background-color: var(--voicemail-color);
 }
 
 [data-default-node-name="Voicemail"]:hover {
     box-shadow: 0px 0px 6px 0px var(--voicemail-color);
 }
+
 [data-default-node-name="Play"]:hover {
     box-shadow: 0px 0px 6px 0px var(--play-color);
 }
+
 [data-default-node-name="Pixel"]:hover {
     box-shadow: 0px 0px 6px 0px var(--pixel-color);
 }
+
 [data-default-node-name="Hours"]:hover {
     box-shadow: 0px 0px 6px 0px var(--hours-color);
 }
+
 [data-default-node-name="Go To"]:hover {
     box-shadow: 0px 0px 6px 0px var(--goto-color);
 }
+
 [data-default-node-name="Gather"]:hover {
     box-shadow: 0px 0px 6px 0px var(--gather-color);
 }
+
 [data-default-node-name="Router"]:hover {
     box-shadow: 0px 0px 6px 0px var(--router-color);
 }
+
 [data-default-node-name="Menu"]:hover {
     box-shadow: 0px 0px 6px 0px var(--menu-color);
 }
+
 [data-default-node-name="Hangup"]:hover {
     box-shadow: 0px 0px 6px 0px var(--hangup-color);
 }
+
 [data-default-node-name="Dial"]:hover {
     box-shadow: 0px 0px 6px 0px var(--dial-color);
 }

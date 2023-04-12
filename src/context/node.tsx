@@ -1,9 +1,12 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import createEngine, { 
-    DefaultLinkModel, 
+import createEngine, {
+    DefaultDiagramState,
     DefaultNodeModel,
-    DiagramModel 
-  } from '@projectstorm/react-diagrams';
+    DefaultPortModel,
+    DiagramModel,
+    LinkModel,
+} from '@projectstorm/react-diagrams';
+// import ZoomAction from "../actions/zoom";
 
 interface Props {
     children?: ReactNode
@@ -23,10 +26,52 @@ interface NodeContextInterface {
 }
 
 export const NodeContext = createContext<NodeContextInterface | null>(null);
+
+
+
+//Engine Settings for FlowChart
 const engine = createEngine();
 const model = new DiagramModel();
 
-function NodeProvider ({children}: Props) {
+// engine.getActionEventBus().registerAction(new ZoomAction());
+
+engine.maxNumberPointsPerLink = 0;
+
+const state = engine.getStateMachine().getCurrentState();
+if (state instanceof DefaultDiagramState) {
+    state.dragNewLink.config.allowLooseLinks = false;
+}
+
+model.registerListener({
+    linksUpdated: (e: any) => {
+        e.link.registerListener({
+            targetPortChanged: (event: any) => {
+                console.log(event);
+                if (e.isCreated) {
+                    console.log('created');
+                } else {
+
+                }
+                const link = e.link;
+                const sourcePort = link.getSourcePort() as DefaultPortModel;
+                const nOfLinks = Object.keys(sourcePort.getLinks()).length;
+                const maxLinks = sourcePort.getOptions().maximumLinks;
+
+                if (maxLinks) {
+                    if (nOfLinks >= maxLinks) {
+                        sourcePort.setLocked(true);
+                    }
+                }
+
+                link.setLocked(true)
+            }
+        })
+
+    },
+    // eventDidFire: (e: any)
+});
+
+function NodeProvider({ children }: Props) {
     // The Flowchart Engine (Globally declared)
     const mainNode = new DefaultNodeModel({
         name: 'Inbound Call',
@@ -39,10 +84,6 @@ function NodeProvider ({children}: Props) {
     const [nodes, setNodes] = useState<{}[]>([mainNode]);
     var [id, setId] = useState<number>(0);
     let pos = [400, 300];
-
-    useEffect(() => {
-        contextValue.nodes = nodes
-    })
 
     const contextValue = {
         engine,
@@ -130,14 +171,14 @@ function NodeProvider ({children}: Props) {
             name: 'Voicemail',
             lineColor: 'rgb(136, 78, 160)',
             out: {
-               'On Success': 1 
-            }, 
+                'On Success': 1
+            },
             in: 1
         }
     }
 
     function create(type: string) {
-        let node = {...nodeTypes[type]};
+        let node = { ...nodeTypes[type] };
         node['id'] = id;
         const n = new DefaultNodeModel({
             name: node.name,
@@ -145,24 +186,27 @@ function NodeProvider ({children}: Props) {
             locked: false
         });
         const out = node.out;
-        
-        if(out != 0) {
-            let keys = Object.keys(out)
-            for(let i = 0; i < keys.length; i++) {
+
+        if (out != 0) {
+            let keys = Object.keys(out);
+
+            for (let i = 0; i < keys.length; i++) {
                 const port = n.addOutPort(keys[i]);
                 console.log(keys[i], out[keys[i]])
-                if(keys[i] == 'Routes') {
+
+                if (keys[i] == 'Routes') {
                     continue;
                 }
                 port.setMaximumLinks(out[keys[i]]);
             }
         }
-        
-        n.addInPort('').setMaximumLinks(1);
+        const inPort = n.addInPort('');
+        inPort.setMaximumLinks(1);
+        inPort.setLocked(true);
         n.setPosition(pos[0], pos[1]);
 
         setNodes(nodes => [...nodes, n]);
-        setId(id => id+1);
+        setId(id => id + 1);
     }
 
     function remove(type: string) {
