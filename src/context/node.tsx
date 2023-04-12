@@ -4,7 +4,6 @@ import createEngine, {
     DefaultNodeModel,
     DefaultPortModel,
     DiagramModel,
-    LinkModel,
 } from '@projectstorm/react-diagrams';
 // import ZoomAction from "../actions/zoom";
 
@@ -46,24 +45,27 @@ model.registerListener({
     linksUpdated: (e: any) => {
         e.link.registerListener({
             targetPortChanged: (event: any) => {
-                console.log(event);
-                if (e.isCreated) {
-                    console.log('created');
-                } else {
-
-                }
                 const link = e.link;
                 const sourcePort = link.getSourcePort() as DefaultPortModel;
+                const targetPort = link.getTargetPort() as DefaultPortModel;
+                const tPortLinks = targetPort.getLinks();
                 const nOfLinks = Object.keys(sourcePort.getLinks()).length;
                 const maxLinks = sourcePort.getOptions().maximumLinks;
-
-                if (maxLinks) {
-                    if (nOfLinks >= maxLinks) {
-                        sourcePort.setLocked(true);
+                if (e.isCreated) {
+                    if (maxLinks) {
+                        if (nOfLinks >= maxLinks) {
+                            sourcePort.setLocked(true);
+                        }
                     }
+                    link.setLocked(true);
+                    Object.keys(tPortLinks).forEach(l => {
+                        if (`${link.getOptions().id}` != l) {
+                            tPortLinks[l].setLocked(false);
+                            tPortLinks[l].getSourcePort().setLocked(false);
+                            tPortLinks[l].remove();
+                        }
+                    });
                 }
-
-                link.setLocked(true)
             }
         })
 
