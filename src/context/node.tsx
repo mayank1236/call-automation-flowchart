@@ -1,9 +1,12 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import createEngine, {
     DefaultDiagramState,
+    DefaultLabelModel,
+    DefaultLinkModel,
     DefaultNodeModel,
     DefaultPortModel,
     DiagramModel,
+    LabelModel,
 } from '@projectstorm/react-diagrams';
 // import ZoomAction from "../actions/zoom";
 
@@ -26,7 +29,89 @@ interface NodeContextInterface {
 
 export const NodeContext = createContext<NodeContextInterface | null>(null);
 
-
+const nodeTypes: nodeTypesObj = {
+    'dial': {
+        name: 'Dial',
+        lineColor: 'rgb(82, 190, 128)',
+        out: {
+            'On Failure': 1
+        },
+        in: 1,
+    },
+    'hangup': {
+        name: 'Hangup',
+        lineColor: 'rgb(230, 126, 34)',
+        out: 0,
+        in: 1,
+    },
+    'menu': {
+        name: 'Menu',
+        lineColor: 'rgb(0, 62, 112)',
+        out: {
+            'On Key Press': 10,
+            'On Failure': 1
+        },
+        in: 1
+    },
+    'router': {
+        name: 'Router',
+        lineColor: 'rgb(131, 134, 133)',
+        out: {
+            'Routes': 'any'
+        },
+        in: 1
+    },
+    'gather': {
+        name: 'Gather',
+        lineColor: 'rgb(131, 134, 133)',
+        out: {
+            'On Success': 1,
+            'On Failure': 1
+        },
+        in: 1
+    },
+    'go to': {
+        name: 'Go To',
+        lineColor: 'rgb(131, 134, 133)',
+        out: {
+            'On Failure': 1
+        },
+        in: 1
+    },
+    'hours': {
+        name: 'Hours',
+        lineColor: 'rgb(154, 200, 213)',
+        out: {
+            'Open': 1,
+            'Closed': 1
+        },
+        in: 1
+    },
+    'pixel': {
+        name: 'Pixel',
+        lineColor: 'rgb(154, 200, 213)',
+        out: {
+            'On Success': 1
+        },
+        in: 1
+    },
+    'play': {
+        name: 'Play',
+        lineColor: 'rgb(136, 78, 160)',
+        out: {
+            'On Success': 1
+        },
+        in: 1
+    },
+    'voicemail': {
+        name: 'Voicemail',
+        lineColor: 'rgb(136, 78, 160)',
+        out: {
+            'On Success': 1
+        },
+        in: 1
+    }
+}
 
 //Engine Settings for FlowChart
 const engine = createEngine();
@@ -43,21 +128,41 @@ if (state instanceof DefaultDiagramState) {
 
 model.registerListener({
     linksUpdated: (e: any) => {
-        e.link.registerListener({
-            targetPortChanged: (event: any) => {
-                const link = e.link;
-                const sourcePort = link.getSourcePort() as DefaultPortModel;
-                const targetPort = link.getTargetPort() as DefaultPortModel;
-                const tPortLinks = targetPort.getLinks();
-                const nOfLinks = Object.keys(sourcePort.getLinks()).length;
-                const maxLinks = sourcePort.getOptions().maximumLinks;
-                if (e.isCreated) {
+        if (e.isCreated) {
+            let link: DefaultLinkModel = e.link;
+            const sourcePort = link.getSourcePort() as DefaultPortModel;
+            const sPortLinks = sourcePort.getLinks();
+            const sourceNodeName = document.querySelector(`[data-nodeid="${sourcePort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
+            const maxLinks = sourcePort.getOptions().maximumLinks;
+            e.link.registerListener({
+                targetPortChanged: (event: any) => {
+                    const targetPort = link.getTargetPort() as DefaultPortModel;
+                    const tPortLinks = targetPort.getLinks();
+                    const path = document.querySelector(`[data-linkid="${link.getOptions().id}"]`)?.querySelectorAll("path");
+                    const targetNodeName = document.querySelector(`[data-nodeid="${targetPort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
+
                     if (maxLinks) {
-                        if (nOfLinks >= maxLinks) {
+                        if (Object.keys(sPortLinks).length >= maxLinks) {
                             sourcePort.setLocked(true);
+                        }
+                        // Assing label to Menu links
+                        if (sourceNodeName == "Menu" && maxLinks > 1) {
+                            Object.keys(sPortLinks).forEach((l, i) => {
+                                if (sPortLinks[l].getLabels().length < 1) {
+                                    sPortLinks[l].addLabel(new DefaultLabelModel({ label: `${i}` }));
+                                }
+                            });
                         }
                     }
                     link.setLocked(true);
+
+                    // Assign labels color
+                    Object.keys(nodeTypes).forEach(node => {
+                        if (nodeTypes[node].name == targetNodeName && path) {
+                            link.setColor(nodeTypes[node].lineColor);
+                        }
+                    });
+
                     Object.keys(tPortLinks).forEach(l => {
                         if (`${link.getOptions().id}` != l) {
                             tPortLinks[l].setLocked(false);
@@ -65,9 +170,22 @@ model.registerListener({
                             tPortLinks[l].remove();
                         }
                     });
-                }
-            }
-        })
+
+                },
+                entityRemoved: (e: any) => {
+                    if (maxLinks && sourceNodeName == "Menu" && maxLinks > 1) {
+                        Object.keys(sPortLinks).forEach((l, i) => {
+                            if (sPortLinks[l].getLabels().length == 1) {
+                                sPortLinks[l].getLabels().forEach(lab => {
+                                    (lab as DefaultLabelModel).setLabel(`${i}`);
+                                })
+                            }
+                        })
+                    }
+                },
+                // eventDidFire: (e: any)
+            })
+        }
 
     },
     // eventDidFire: (e: any)
@@ -95,90 +213,6 @@ function NodeProvider({ children }: Props) {
         remove
     }
 
-    const nodeTypes: nodeTypesObj = {
-        'dial': {
-            name: 'Dial',
-            lineColor: 'rgb(82, 190, 128)',
-            out: {
-                'On Failure': 1
-            },
-            in: 1,
-        },
-        'hangup': {
-            name: 'Hangup',
-            lineColor: 'rgb(230, 126, 34)',
-            out: 0,
-            in: 1,
-        },
-        'menu': {
-            name: 'Menu',
-            lineColor: 'rgb(0, 62, 112)',
-            out: {
-                'On Key Press': 10,
-                'On Failure': 1
-            },
-            in: 1
-        },
-        'router': {
-            name: 'Router',
-            lineColor: 'rgb(131, 134, 133)',
-            out: {
-                'Routes': 'any'
-            },
-            in: 1
-        },
-        'gather': {
-            name: 'Gather',
-            lineColor: 'rgb(131, 134, 133)',
-            out: {
-                'On Success': 1,
-                'On Failure': 1
-            },
-            in: 1
-        },
-        'go to': {
-            name: 'Go To',
-            lineColor: 'rgb(131, 134, 133)',
-            out: {
-                'On Failure': 1
-            },
-            in: 1
-        },
-        'hours': {
-            name: 'Hours',
-            lineColor: 'rgb(154, 200, 213)',
-            out: {
-                'Open': 1,
-                'Closed': 1
-            },
-            in: 1
-        },
-        'pixel': {
-            name: 'Pixel',
-            lineColor: 'rgb(154, 200, 213)',
-            out: {
-                'On Success': 1
-            },
-            in: 1
-        },
-        'play': {
-            name: 'Play',
-            lineColor: 'rgb(136, 78, 160)',
-            out: {
-                'On Success': 1
-            },
-            in: 1
-        },
-        'voicemail': {
-            name: 'Voicemail',
-            lineColor: 'rgb(136, 78, 160)',
-            out: {
-                'On Success': 1
-            },
-            in: 1
-        }
-    }
-
     function create(type: string) {
         let node = { ...nodeTypes[type] };
         node['id'] = id;
@@ -194,7 +228,7 @@ function NodeProvider({ children }: Props) {
 
             for (let i = 0; i < keys.length; i++) {
                 const port = n.addOutPort(keys[i]);
-                console.log(keys[i], out[keys[i]])
+                // console.log(keys[i], out[keys[i]])
 
                 if (keys[i] == 'Routes') {
                     continue;
