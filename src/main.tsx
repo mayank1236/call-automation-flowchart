@@ -6,9 +6,9 @@ import NodeProvider from './context/node'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <FormProvider>
-    <NodeProvider>
+  <NodeProvider>
+    <FormProvider>
       <App />
-    </NodeProvider>
-  </FormProvider>
+    </FormProvider>
+  </NodeProvider>
 )

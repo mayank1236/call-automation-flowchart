@@ -1,65 +1,54 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { NodeContext } from "./node";
+import { DefaultNodeModel } from "@projectstorm/react-diagrams";
 
+// any props that come into the component
 interface Props {
     children?: ReactNode
-    // any props that come into the component
 }
 
 interface FormContextInterface {
-    formIsOpen: any[];
-    // setFormIsOpen: React.Dispatch<React.SetStateAction<boolean[]>>
-    openForm: (i: number) => void;
+    formIsOpen: string;
+    openForm: (i: string) => void;
     closeForm: () => void;
+    updateForm: React.Dispatch<React.SetStateAction<{}>>;
+    forms: {};
 }
 
 export const FormContext = createContext<FormContextInterface | null>(null);
 
 function FormProvider({ children }: Props) {
-    const [formIsOpen, setFormIsOpen] = useState([[false], 0]);
-    const openForm = (i: number) => {
-        setFormIsOpen((o: any[]) => {
-            //Never open first form
-            if (i == 0) {
-                return o;
-            }
-            let open = [...o];
-            // Check if not defined then open, otherwise close
-            if (open[0][i] != null) {
-                open[0][i] = !open[0][i];
-            } else {
-                open[0][i] = true;
-            }
+    const [forms, setForms] = useState<{ [key: string]: any }>({})
+    const [formIsOpen, setFormIsOpen] = useState<string>('');
 
-            // Closing any other open form tabs
-            open[0].forEach((val: boolean, index: number) => {
-                if (index != i && val) {
-                    open[0][index] = false;
-                }
+    const openForm = (i: string) => {
+        // Initialize Forms
+        if (forms[i] == null) {
+            setForms(prev => {
+                const newForm = { ...prev }
+                newForm[i] = {}
+                return newForm;
             });
+        }
 
-            open[1] = i;
-            return open;
+        setFormIsOpen((prev: string) => {
+            if (prev == i) {
+                return '';
+            }
+            return i;
         });
     }
 
     const closeForm = () => {
-        setFormIsOpen((open: any[]) => {
-            let close = [...open].map((arr, index) => {
-                if (index == 0) {
-                    return arr = arr.map(() => false)
-                } else {
-                    return arr
-                }
-            });
-
-            return close;
-        })
+        setFormIsOpen('');
     }
 
     const value = {
         formIsOpen: formIsOpen,
         openForm: openForm,
-        closeForm: closeForm
+        closeForm: closeForm,
+        updateForm: setForms,
+        forms: forms
     }
 
     return (

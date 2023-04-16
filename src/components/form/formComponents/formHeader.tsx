@@ -1,21 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { NodeContext } from '../../../context/node';
+import { FormContext } from '../../../context/form';
 
-const FormHeader = ({formId, closeForm}: {formId: number, closeForm: any}) => {
+const FormHeader = ({ closeForm }: { closeForm: any }) => {
     const [att, setAtt] = useState('');
-    let elements: any[];
-    
-    const handleDelete = () => {};
+    const nodeObj = useContext(NodeContext);
+    const formObj = useContext(FormContext);
+    const nodeId = formObj?.formIsOpen;
+
+
+
+    const handleDelete = () => { };
     const handleClose = () => {
         closeForm();
     };
 
     useEffect(() => {
-        elements = [...document.querySelectorAll('.node > div')];
-        const elementName = elements[formId].getAttribute('data-default-node-name').toLowerCase();
-        setAtt(elementName);
-    }, [formId]);
+        nodeObj?.nodes.forEach(node => {
+            if (nodeId == node.getOptions().id) {
+                setAtt(node.getOptions().name)
+            }
+        })
+    }, [nodeId]);
 
-    if(att.length > 0) {
+    if (att.length > 0) {
         return (
             <div className="form-header">
                 <div className="form-name">{att}</div>

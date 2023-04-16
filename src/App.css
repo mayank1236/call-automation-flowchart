@@ -8,3 +8,22 @@
     border: 1px solid black;
     position: relative;
 }
+
+.flowchart .button-list {
+    position: fixed;
+    display: none;
+    width: 180px;
+    z-index: 3
+}
+
+.flowchart .button-list .btn-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.flowchart .button-list .btn-container button {
+    margin: 0;
+    width: 100%;
+}

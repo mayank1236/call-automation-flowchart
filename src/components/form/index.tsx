@@ -5,22 +5,18 @@ import './style.css'
 
 const Form = () => {
     const formObj = useContext(FormContext);
-    const [formId, setFormId] = useState(0);
-    
-    useEffect(() => {
-        setFormId(formObj?.formIsOpen[1])
-    }, [formObj?.formIsOpen[1]]);
-
-    return (
-        <div 
-            style={{
-                display: formObj?.formIsOpen[0][formId] ? 'block':'none',
-            }}
-            className="form-container"
-        >
-            <FormWrapper  closeForm={formObj?.closeForm} formId={formId} />
-        </div>
-    )
+    if (formObj?.formIsOpen) {
+        return (
+            <div
+                style={{
+                    display: formObj?.formIsOpen.length > 0 ? 'block' : 'none',
+                }}
+                className="form-container"
+            >
+                <FormWrapper closeForm={formObj?.closeForm} />
+            </div>
+        )
+    }
 }
 
 export default Form

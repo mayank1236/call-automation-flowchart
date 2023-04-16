@@ -8,7 +8,6 @@ import createEngine, {
     DiagramModel,
     LabelModel,
 } from '@projectstorm/react-diagrams';
-// import ZoomAction from "../actions/zoom";
 
 interface Props {
     children?: ReactNode
@@ -117,7 +116,6 @@ const nodeTypes: nodeTypesObj = {
 const engine = createEngine();
 const model = new DiagramModel();
 
-// engine.getActionEventBus().registerAction(new ZoomAction());
 
 engine.maxNumberPointsPerLink = 0;
 
@@ -202,7 +200,7 @@ function NodeProvider({ children }: Props) {
         .addOutPort('')
         .setMaximumLinks(1);
 
-    const [nodes, setNodes] = useState<{}[]>([mainNode]);
+    const [nodes, setNodes] = useState([mainNode]);
     var [id, setId] = useState<number>(0);
 
     const contextValue = {
@@ -228,8 +226,6 @@ function NodeProvider({ children }: Props) {
 
             for (let i = 0; i < keys.length; i++) {
                 const port = n.addOutPort(keys[i]);
-                // console.log(keys[i], out[keys[i]])
-
                 if (keys[i] == 'Routes') {
                     continue;
                 }
@@ -243,7 +239,9 @@ function NodeProvider({ children }: Props) {
         const nodePos = allNodes[allNodes.length - 1].getPosition();
         n.setPosition(nodePos.x + 250, nodePos.y);
 
-        setNodes(nodes => [...nodes, n]);
+        setNodes((nodes: any) => {
+            return [...nodes, n];
+        });
         setId(id => id + 1);
     }
 

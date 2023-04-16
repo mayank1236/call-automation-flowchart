@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import MainField from './mainField';
 import SmallFields from './smallFields';
 import Toggle from './toggleComponent';
+import { FormContext } from '../../../context/form';
+import { NodeContext } from '../../../context/node';
 
 interface formTypesObj {
     [key: string]: any
 }
 
-const FormContent = ({ formId }: { formId: number }) => {
+const FormContent = () => {
     const [att, setAtt] = useState('');
-    let elements: any[];
+    const nodeObj = useContext(NodeContext);
+    const formObj = useContext(FormContext);
+    const nodeId = formObj?.formIsOpen;
+
     const [checked, setChecked] = useState(false);
 
     const formType: formTypesObj = {
@@ -101,10 +106,12 @@ const FormContent = ({ formId }: { formId: number }) => {
     };
 
     useEffect(() => {
-        elements = [...document.querySelectorAll('.node > div')];
-        const elementName = elements[formId].getAttribute('data-default-node-name').toLowerCase();
-        setAtt(elementName);
-    }, [formId]);
+        nodeObj?.nodes.forEach(node => {
+            if (nodeId == node.getOptions().id) {
+                setAtt(node.getOptions().name.toLowerCase())
+            }
+        })
+    }, [nodeId]);
 
 
 
