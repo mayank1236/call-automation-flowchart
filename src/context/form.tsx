@@ -1,6 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { NodeContext } from "./node";
-import { DefaultNodeModel } from "@projectstorm/react-diagrams";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 // any props that come into the component
 interface Props {
@@ -21,15 +19,20 @@ function FormProvider({ children }: Props) {
     const [forms, setForms] = useState<{ [key: string]: any }>({})
     const [formIsOpen, setFormIsOpen] = useState<string>('');
 
+    useEffect(() => {
+        console.log(forms)
+    }, [forms])
+
     const openForm = (i: string) => {
-        // Initialize Forms
-        if (forms[i] == null) {
-            setForms(prev => {
-                const newForm = { ...prev }
-                newForm[i] = {}
-                return newForm;
-            });
-        }
+        // Initialize && updating Forms
+        setForms(prev => {
+            const exists = Object.keys(prev).includes(i);
+            const newForm = { ...prev }
+            if (!exists) {
+                newForm[i] = {};
+            }
+            return newForm;
+        });
 
         setFormIsOpen((prev: string) => {
             if (prev == i) {

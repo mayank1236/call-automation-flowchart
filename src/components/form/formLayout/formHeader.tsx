@@ -1,22 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { NodeContext } from '../../../context/node';
-import { FormContext } from '../../../context/form';
 
-const FormHeader = ({ closeForm }: { closeForm: any }) => {
+const FormHeader = ({ closeForm, formObj, nodeObj }: { closeForm: any, formObj: any, nodeObj: any }) => {
     const [att, setAtt] = useState('');
-    const nodeObj = useContext(NodeContext);
-    const formObj = useContext(FormContext);
     const nodeId = formObj?.formIsOpen;
 
-
-
-    const handleDelete = () => { };
+    const handleDelete = () => {
+        // nodeId will be used here
+        // TO delete the node
+        // and the form and form data
+        // from there respective contexts
+    };
     const handleClose = () => {
         closeForm();
     };
 
     useEffect(() => {
-        nodeObj?.nodes.forEach(node => {
+        nodeObj?.nodes.forEach((node: any) => {
             if (nodeId == node.getOptions().id) {
                 setAtt(node.getOptions().name)
             }

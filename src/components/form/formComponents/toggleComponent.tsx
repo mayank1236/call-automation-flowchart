@@ -1,35 +1,33 @@
 import React from 'react'
 
-const Toggle = ({name, checked, onChange}: {
+const Toggle = ({ name, formObj }: {
   name: string;
-  checked: any;
-  onChange: any;
+  formObj: any;
 }) => {
-  const disabled = !checked;
-  function handleKeyPress(e: any) {
-    if (e.keyCode !== 32) return;
-
-    e.preventDefault();
-    onChange(!checked);
+  const inputName = name.toLowerCase();
+  const nodeId = formObj?.formIsOpen;
+  const checked = !!formObj?.forms[nodeId][inputName];
+  function handleChange(e: any) {
+    formObj.updateForm((prev: any) => {
+      return { ...prev, [nodeId]: { ...prev[nodeId], [inputName]: !checked } }
+    })
   }
 
   return (
     <div className="toggle-switch field-container">
       <label
-          className="toggle-switch-label"
-          tabIndex={disabled ? -1 : 1}
-          onKeyDown={(e) => handleKeyPress(e)}
-        >
-          {name}
-        </label>
+        className="toggle-switch-label"
+        onClick={handleChange}
+      >
+        {name}
+      </label>
       <div>
         <input
           type="checkbox"
           name={name}
           className="toggle-switch-checkbox"
           checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          disabled={disabled}
+          onChange={handleChange}
         />
       </div>
     </div>

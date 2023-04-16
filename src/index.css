@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
 :root {
     --dial-color: rgb(82, 190, 128);
     --hangup-color: rgb(230, 126, 34);
@@ -23,7 +24,8 @@ body {
     background-color: #1f263d;
 }
 
-button {
+button,
+.btn {
     text-align: center;
     padding: 0.5rem 1.2rem;
     border-radius: 1px;

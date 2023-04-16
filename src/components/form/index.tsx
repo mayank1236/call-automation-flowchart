@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { FormContext } from '../../context/form'
-import FormWrapper from './formComponents/formWrapper';
+import FormWrapper from './formLayout/formWrapper';
 import './style.css'
+import { NodeContext } from '../../context/node';
 
 const Form = () => {
     const formObj = useContext(FormContext);
+    const nodeObj = useContext(NodeContext);
+
     if (formObj?.formIsOpen) {
         return (
             <div
@@ -13,7 +16,7 @@ const Form = () => {
                 }}
                 className="form-container"
             >
-                <FormWrapper closeForm={formObj?.closeForm} />
+                <FormWrapper formObj={formObj} nodeObj={nodeObj} closeForm={formObj?.closeForm} />
             </div>
         )
     }
