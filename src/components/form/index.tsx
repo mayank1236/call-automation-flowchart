@@ -19,6 +19,8 @@ const Form = () => {
                 <FormWrapper formObj={formObj} nodeObj={nodeObj} closeForm={formObj?.closeForm} />
             </div>
         )
+    } else {
+        return (<></>)
     }
 }
 
