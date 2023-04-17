@@ -102,13 +102,13 @@
     border-radius: 0.3rem;
 }
 
-.recording-section .btn-group {
+.btn-group {
     display: flex;
     align-items: center;
     width: 70%;
 }
 
-.recording-section .btn-group .btn {
+.btn-group .btn {
     letter-spacing: normal;
     text-transform: capitalize;
     font-size: 13px;
@@ -120,7 +120,7 @@
     width: 100%;
 }
 
-.recording-section .btn-group .btn input {
+.btn-group .btn input {
     position: absolute;
     clip: rect(0, 0, 0, 0);
     pointer-events: none;

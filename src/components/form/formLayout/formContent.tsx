@@ -5,6 +5,10 @@ import MenuForm from '../forms/MenuForm';
 import GatherForm from '../forms/GatherForm';
 import GotoForm from '../forms/GotoForm';
 import HoursForm from '../forms/HoursForm';
+import RouterForm from '../forms/RouterForm';
+import PixelForm from '../forms/PixelForm';
+import PlayForm from '../forms/PlayForm';
+import VoicemailForm from '../forms/VoicemailForm';
 
 interface formTypesObj {
     [key: string]: any
@@ -35,7 +39,7 @@ const FormContent = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
                 formComponent = <MenuForm formObj={formObj} nodeObj={nodeObj} />;
                 break;
             case 'router':
-                formComponent = <></>;
+                formComponent = <RouterForm formObj={formObj} nodeObj={nodeObj} />;
                 break;
             case 'gather':
                 formComponent = <GatherForm formObj={formObj} />;
@@ -47,13 +51,13 @@ const FormContent = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
                 formComponent = <HoursForm formObj={formObj} />;
                 break;
             case 'pixel':
-                formComponent = <></>;
+                formComponent = <PixelForm nodeObj={nodeObj} formObj={formObj} />;
                 break;
             case 'play':
-                formComponent = <></>;
+                formComponent = <PlayForm formObj={formObj} />;
                 break;
             case 'voicemail':
-                formComponent = <></>;
+                formComponent = <VoicemailForm formObj={formObj} />;
                 break;
         };
 
