@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import DialForm from '../forms/DialForm';
 import HangupForm from '../forms/HangupForm';
 import MenuForm from '../forms/MenuForm';
+import GatherForm from '../forms/GatherForm';
+import GotoForm from '../forms/GotoForm';
+import HoursForm from '../forms/HoursForm';
 
 interface formTypesObj {
     [key: string]: any
@@ -35,13 +38,13 @@ const FormContent = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
                 formComponent = <></>;
                 break;
             case 'gather':
-                formComponent = <></>;
+                formComponent = <GatherForm formObj={formObj} />;
                 break;
             case 'go to':
-                formComponent = <></>;
+                formComponent = <GotoForm formObj={formObj} nodeObj={nodeObj} />;
                 break;
             case 'hours':
-                formComponent = <></>;
+                formComponent = <HoursForm formObj={formObj} />;
                 break;
             case 'pixel':
                 formComponent = <></>;

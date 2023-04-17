@@ -14,6 +14,21 @@ const MainField = ({ name, inputType, formObj }: {
     });
   }
 
+  if (inputType == "textarea") {
+    return (
+      <div className="field-container">
+        <label className="name">{name}</label>
+        <div className="field">
+          <textarea
+            value={formObj?.forms[nodeId][inputName] || ''}
+            onChange={handleValue}
+            rows={3}
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="field-container">
       <label className="name">{name}</label>

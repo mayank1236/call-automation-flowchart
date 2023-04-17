@@ -7,7 +7,8 @@
     width: 405px;
     box-sizing: border-box;
     z-index: 3;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: #1f263d;
     box-shadow: -1px 0px 6px 0px #030303;
     border-width: 1px 1px 1px 0;
@@ -72,7 +73,8 @@
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
     background: #3e4464 !important;
     border: 1px solid #3e4464;
     border-radius: 0.3rem;
@@ -84,9 +86,13 @@
     font-size: 13px;
     font-weight: 400;
     transition: .2s;
-    height: 33px;
     color: white;
     padding: 5px 8px;
+}
+
+.field input,
+.field select {
+    height: 33px;
 }
 
 .recording-section {
@@ -94,4 +100,44 @@
     background: #141722;
     margin-bottom: 1rem;
     border-radius: 0.3rem;
+}
+
+.recording-section .btn-group {
+    display: flex;
+    align-items: center;
+    width: 70%;
+}
+
+.recording-section .btn-group .btn {
+    letter-spacing: normal;
+    text-transform: capitalize;
+    font-size: 13px;
+    color: #fff;
+    background-color: #3858e7;
+    border-color: #3858e7;
+    min-height: 33px;
+    margin: 0;
+    width: 100%;
+}
+
+.recording-section .btn-group .btn input {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    pointer-events: none;
+    margin: 4px 0 0;
+    line-height: normal;
+}
+
+.recording-section>div .btn-group {
+    margin-top: -6px;
+}
+
+.small-fields {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.small-fields>* {
+    flex: 50%;
 }
