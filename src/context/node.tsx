@@ -121,6 +121,7 @@ const draftModel = localStorage.getItem('modelState');
 
 if (draftModel) {
     model.deserializeModel(JSON.parse(draftModel), engine);
+    localStorage.removeItem('modelState');
 }
 
 const mainNode = new DefaultNodeModel({

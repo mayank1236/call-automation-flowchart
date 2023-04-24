@@ -16,6 +16,7 @@ interface FormContextInterface {
 export const FormContext = createContext<FormContextInterface | null>(null);
 
 const draftForm = localStorage.getItem('formState');
+localStorage.removeItem('formState');
 
 let initState = {};
 if (draftForm) {
