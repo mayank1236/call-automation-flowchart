@@ -71,19 +71,6 @@ const FlowChart = () => {
       }
     });
 
-    window.addEventListener("wheel", (event) => {
-      console.log(event.target)
-      if (event.target === document || event.target === document.documentElement || event.target === window) {
-        event.preventDefault();
-      }
-    }, false);
-
-    window.addEventListener("touchmove", (event) => {
-      if (event.target === document || event.target === document.documentElement || event.target === window) {
-        event.preventDefault();
-      }
-    }, false);
-
   }, []);
 
   // Zoom in or zoom out with +/- buttons

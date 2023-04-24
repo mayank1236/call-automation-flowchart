@@ -35,6 +35,7 @@ const MainForm = () => {
 
   const handleDraft = (e: any) => {
     e.preventDefault();
+    model.setZoomLevel(100);
     setMod(model.serialize());
     setFormState(form);
   }
