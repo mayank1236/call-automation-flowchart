@@ -15,12 +15,19 @@ interface FormContextInterface {
 
 export const FormContext = createContext<FormContextInterface | null>(null);
 
+const draftForm = localStorage.getItem('formState');
+
+let initState = {};
+if (draftForm) {
+    initState = JSON.parse(draftForm)
+}
+
 function FormProvider({ children }: Props) {
-    const [forms, setForms] = useState<{ [key: string]: any }>({})
+    const [forms, setForms] = useState<{ [key: string]: any }>(initState)
     const [formIsOpen, setFormIsOpen] = useState<string>('');
 
     useEffect(() => {
-        console.log(forms)
+        console.log(forms);
     }, [forms])
 
     const openForm = (i: string) => {

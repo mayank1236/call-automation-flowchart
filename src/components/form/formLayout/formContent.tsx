@@ -19,6 +19,8 @@ const FormContent = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
     const forms: formTypesObj | undefined = formObj?.forms;
     const nodes = nodeObj?.nodes;
 
+    const [rules, setRules] = useState(['']);
+
     const components = forms && nodes && Object.keys(forms)?.map((form: string) => {
         let formComponent;
         let name: string = '';
@@ -69,7 +71,18 @@ const FormContent = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
     // The Main format of the forms is ready
 
     return (
-        <div className="form-content">{components}</div>
+        <div className="form-content">
+            {rules[0].length > 0 && (
+                <div className="form-warnings">
+                    <ul>
+                        {
+                            rules.map(rule => (<li>{rule}</li>))
+                        }
+                    </ul>
+                </div>
+            )}
+            {components}
+        </div>
     )
 }
 

@@ -113,8 +113,26 @@ const nodeTypes: nodeTypesObj = {
 }
 
 //Engine Settings for FlowChart
-const engine = createEngine({ registerDefaultDeleteItemsAction: false });
+const engine = createEngine({
+    registerDefaultDeleteItemsAction: false
+});
 const model = new DiagramModel();
+const draftModel = localStorage.getItem('modelState');
+
+if (draftModel) {
+    model.deserializeModel(JSON.parse(draftModel), engine);
+}
+
+const mainNode = new DefaultNodeModel({
+    name: 'Inbound Call',
+    color: 'rgb(0,192,255)',
+});
+mainNode.setPosition(100, 350);
+mainNode
+    .addOutPort('')
+    .setMaximumLinks(1);
+
+const nodeState = model.getNodes().length >= 1 ? model.getNodes() : [mainNode];
 
 
 engine.maxNumberPointsPerLink = 0;
@@ -191,16 +209,8 @@ model.registerListener({
 
 function NodeProvider({ children }: Props) {
     // The Flowchart Engine (Globally declared)
-    const mainNode = new DefaultNodeModel({
-        name: 'Inbound Call',
-        color: 'rgb(0,192,255)',
-    });
-    mainNode.setPosition(100, 350);
-    mainNode
-        .addOutPort('')
-        .setMaximumLinks(1);
 
-    const [nodes, setNodes] = useState([mainNode]);
+    const [nodes, setNodes] = useState([...nodeState]);
     var [id, setId] = useState<number>(0);
 
     const contextValue = {

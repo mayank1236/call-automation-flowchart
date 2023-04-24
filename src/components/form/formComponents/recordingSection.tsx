@@ -18,11 +18,11 @@ const RecordingSection = ({ formObj }: { formObj: any }) => {
                 <MainField formObj={formObj} name="Plays" inputType="number" />
                 <div className="btn-group">
                     <label className="btn" style={{ opacity: "0.8" }}>
-                        <input type="radio" autoComplete='off' className="btn" checked={!checked} />
+                        <input type="radio" autoComplete='off' className="btn" name="mode" />
                         Play
                     </label>
                     <label className="btn">
-                        <input type="radio" autoComplete='off' className="btn" checked={checked} />
+                        <input type="radio" autoComplete='off' className="btn" name="mode" />
                         Say
                     </label>
                 </div>
