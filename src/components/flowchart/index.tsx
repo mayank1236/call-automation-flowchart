@@ -19,33 +19,6 @@ const FlowChart = () => {
     y: number;
   };
 
-  // Show a list buttons that create nodes on right click
-  useEffect(() => {
-    document.querySelector('.button-list')?.addEventListener('click', () => {
-      (document.querySelector('.button-list') as HTMLElement).style.display = 'none';
-    });
-
-    document.querySelector('.canvas')?.addEventListener('contextmenu', (e) => {
-      const event = e as MouseEvent;
-      e.preventDefault();
-      var x = event.clientX;
-      var y = event.clientY;
-      if (e.currentTarget) {
-        (document.querySelector('.button-list') as HTMLElement).style.display = 'block';
-        (document.querySelector('.button-list') as HTMLElement).style.top = `${y}px`;
-        (document.querySelector('.button-list') as HTMLElement).style.left = `${x}px`;
-      }
-    });
-
-    // Add event listener to hide the button-list when clicked outside the element
-    document.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest('.button-list') && document.querySelector('.button-list')) {
-        (document.querySelector('.button-list') as HTMLElement).style.display = 'none';
-      }
-    });
-  }, [])
-
   const nodeObj = useContext(NodeContext);
   const engine = nodeObj?.engine;
   const model = nodeObj?.model;
@@ -67,10 +40,58 @@ const FlowChart = () => {
     model.addNode(node);
   });
 
+  // Show a list buttons that create nodes on right click
+  useEffect(() => {
+    const canvas = document.querySelector('.canvas');
+    const buttonList = (document.querySelector('.button-list') as HTMLElement);
+
+    // Close button list on button click
+    buttonList?.addEventListener('click', () => {
+      buttonList.style.display = 'none';
+    });
+
+    // Open Button List menu on Mouse Right Click
+    canvas?.addEventListener('contextmenu', (e) => {
+      const event = e as MouseEvent;
+      e.preventDefault();
+      var x = event.clientX;
+      var y = event.clientY;
+      if (e.currentTarget) {
+        buttonList.style.display = 'block';
+        buttonList.style.top = `${y}px`;
+        buttonList.style.left = `${x}px`;
+      }
+    });
+
+    // Hide the button-list when clicked outside the element
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.button-list') && buttonList) {
+        buttonList.style.display = 'none';
+      }
+    });
+
+    window.addEventListener("wheel", (event) => {
+      console.log(event.target)
+      if (event.target === document || event.target === document.documentElement || event.target === window) {
+        event.preventDefault();
+      }
+    }, false);
+
+    window.addEventListener("touchmove", (event) => {
+      if (event.target === document || event.target === document.documentElement || event.target === window) {
+        event.preventDefault();
+      }
+    }, false);
+
+  }, []);
+
+  // Zoom in or zoom out with +/- buttons
   useEffect(() => {
     model.setZoomLevel(zoomLevel);
-  }, [zoomLevel])
+  }, [zoomLevel]);
 
+  // Open Form on clicking the nodes
   useEffect(() => {
     const elements = [...document.querySelectorAll('.node')];
 

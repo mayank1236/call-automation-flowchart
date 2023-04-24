@@ -113,7 +113,7 @@ const nodeTypes: nodeTypesObj = {
 }
 
 //Engine Settings for FlowChart
-const engine = createEngine();
+const engine = createEngine({ registerDefaultDeleteItemsAction: false });
 const model = new DiagramModel();
 
 
