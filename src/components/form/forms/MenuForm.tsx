@@ -19,7 +19,7 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
                 {
                     routes.map(route => {
                         return (
-                            <div className="field-container">
+                            <div key={route} className="field-container">
                                 <div className="field" style={{ display: "flex", gap: "10px" }}>
                                     <label>Press {route} </label>
                                     <button type="button">Empty +</button>

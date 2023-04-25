@@ -31,7 +31,7 @@ const HoursForm = ({ formObj, nodeObj }: { formObj: any, nodeObj?: any }) => {
             <div className="field-container">
                 {['sun', 'sat', 'fri', 'thu', 'wed', 'tue', 'mon'].map(day => {
                     return (
-                        <div style={{
+                        <div key={day} style={{
                             background: "rgb(20 27 51)",
                             padding: "10px",
                             border: "0.3rem",
