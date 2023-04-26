@@ -28,7 +28,7 @@ interface NodeContextInterface {
 
 export const NodeContext = createContext<NodeContextInterface | null>(null);
 
-const nodeTypes: nodeTypesObj = {
+export const nodeTypes: nodeTypesObj = {
     'dial': {
         name: 'Dial',
         lineColor: 'rgb(82, 190, 128)',
@@ -146,11 +146,11 @@ if (state instanceof DefaultDiagramState) {
 model.registerListener({
     linksUpdated: (e: any) => {
         if (e.isCreated) {
-            let link: DefaultLinkModel = e.link;
+            const link: DefaultLinkModel = e.link;
             const sourcePort = link.getSourcePort() as DefaultPortModel;
             const sPortLinks = sourcePort.getLinks();
             const sourceNodeName = document.querySelector(`[data-nodeid="${sourcePort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
-            const maxLinks = sourcePort.getOptions().maximumLinks;
+            const maxLinks = 10;
             e.link.registerListener({
                 targetPortChanged: (event: any) => {
                     const targetPort = link.getTargetPort() as DefaultPortModel;
@@ -158,25 +158,31 @@ model.registerListener({
                     const path = document.querySelector(`[data-linkid="${link.getOptions().id}"]`)?.querySelectorAll("path");
                     const targetNodeName = document.querySelector(`[data-nodeid="${targetPort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
 
-                    if (maxLinks) {
-                        if (Object.keys(sPortLinks).length >= maxLinks) {
-                            sourcePort.setLocked(true);
-                        }
-                        // Assing label to Menu links
-                        if (sourceNodeName == "Menu" && maxLinks > 1) {
-                            Object.keys(sPortLinks).forEach((l, i) => {
-                                if (sPortLinks[l].getLabels().length < 1) {
-                                    sPortLinks[l].addLabel(new DefaultLabelModel({ label: `${i}` }));
-                                }
-                            });
-                        }
+                    // Assing label to Menu links
+                    if (sourceNodeName == "Menu" && 'On Key Press' == sourcePort.getOptions().name) {
+                        Object.keys(sPortLinks).forEach((l, i) => {
+                            if (sPortLinks[l].getLabels().length < 1) {
+                                sPortLinks[l].addLabel(new DefaultLabelModel({ label: `${i}` }));
+                            }
+                        });
                     }
-                    link.setLocked(true);
 
+                    link.setLocked(true);
                     // Assign labels color
                     Object.keys(nodeTypes).forEach(node => {
-                        if (nodeTypes[node].name == targetNodeName && path) {
-                            link.setColor(nodeTypes[node].lineColor);
+                        if (nodeTypes[node].name == targetNodeName) {
+                            if (
+                                nodeTypes[node]['out']
+                                && (Object.keys(sPortLinks).length >= nodeTypes[node]['out'][sourcePort.getOptions().name])
+                            ) {
+                                sourcePort.setLocked(true);
+                            } else if (nodeTypes[node]['out'][sourcePort.getOptions().name] == 'any') {
+                                sourcePort.setLocked(false)
+                            }
+
+                            if (path) {
+                                link.setColor(nodeTypes[node].lineColor);
+                            }
                         }
                     });
 

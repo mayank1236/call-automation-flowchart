@@ -16,14 +16,16 @@
     z-index: 3
 }
 
-.flowchart .button-list .btn-container {
+.flowchart .button-list .btn-container,
+.toggle-button-list .btn-container {
     position: relative;
     display: flex;
     flex-direction: column;
     padding: 0;
 }
 
-.flowchart .button-list .btn-container button {
+.flowchart .button-list .btn-container button,
+.toggle-button-list .btn-container button {
     margin: 0;
     width: 100%;
 }

@@ -108,7 +108,8 @@
     width: 70%;
 }
 
-.btn-group .btn {
+.btn-group .btn,
+.btn {
     letter-spacing: normal;
     text-transform: capitalize;
     font-size: 13px;
@@ -148,4 +149,33 @@
     color: white;
     margin-bottom: 1rem;
     border-radius: 1px;
+}
+
+.toggle-button-list .btn-container {
+    display: none;
+    position: absolute;
+    margin-top: 33px;
+    padding: 0;
+}
+
+.toggle-button-list {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.toggle-button-list .btn {
+    margin: 0;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+}
+
+.btn:disabled:hover {
+    background: #3858e7;
+    cursor: default;
+}
+
+.field:has(input[type="file"]) {
+    padding-bottom: 0;
 }
