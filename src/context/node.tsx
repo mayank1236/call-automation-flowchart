@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import createEngine, {
     DefaultDiagramState,
     DefaultLabelModel,
@@ -175,12 +175,10 @@ model.registerListener({
                     // Assign labels color
                     Object.keys(nodeTypes).forEach(node => {
                         if (nodeTypes[node].name == sourceNodeName) {
-                            console.log(nodeTypes[node]['out'], [sourcePort.getOptions().name])
                             if (
                                 nodeTypes[node]['out'] != 0
                                 && (Object.keys(sPortLinks).length >= nodeTypes[node]['out'][sourcePort.getOptions().name])
                             ) {
-                                console.log('locked');
                                 sourcePort.setLocked(true);
                             } else if (nodeTypes[node]['out'][sourcePort.getOptions().name] == 'any') {
                                 sourcePort.setLocked(false)

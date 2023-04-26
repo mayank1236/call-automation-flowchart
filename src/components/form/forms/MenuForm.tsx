@@ -35,15 +35,24 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
 
             const updatedModel = nodeObj.model.addLink(newLink);
             newLink.fireEvent({ targetPort: target }, 'targetPortChanged');
-
             setBtnListClicked(false);
         }
-    }, [nodeObj.nodes])
+
+        menuNode && formObj?.updateForm((prev: any) => {
+            let targetValue: { [key: string]: any } = {};
+
+            Object.values(menuNode.getOutPorts()[0].getLinks()).forEach((route, index) => {
+                targetValue[index] = (route.getTargetPort().getNode() as DefaultNodeModel).getOptions().id;
+            });
+
+            return { ...prev, [nodeId]: { ...prev[nodeId], ['menuRoutes']: targetValue } }
+        });
+
+    }, [nodeObj.nodes]);
 
     useEffect(() => {
         (document.querySelector('.toggle-button-list .btn-container') as HTMLElement).style.display = toggle ? 'block' : 'none';
     }, [toggle]);
-
 
     if (!menuNode) {
         nodeObj.nodes.forEach((node: any) => {
