@@ -168,18 +168,26 @@ model.registerListener({
                     }
 
                     link.setLocked(true);
+                    if (sourceNodeName == 'Inbound Call' && Object.keys(sPortLinks).length >= 1) {
+                        sourcePort.setLocked(true);
+                    }
+
                     // Assign labels color
                     Object.keys(nodeTypes).forEach(node => {
-                        if (nodeTypes[node].name == targetNodeName) {
+                        if (nodeTypes[node].name == sourceNodeName) {
+                            console.log(nodeTypes[node]['out'], [sourcePort.getOptions().name])
                             if (
-                                nodeTypes[node]['out']
+                                nodeTypes[node]['out'] != 0
                                 && (Object.keys(sPortLinks).length >= nodeTypes[node]['out'][sourcePort.getOptions().name])
                             ) {
+                                console.log('locked');
                                 sourcePort.setLocked(true);
                             } else if (nodeTypes[node]['out'][sourcePort.getOptions().name] == 'any') {
                                 sourcePort.setLocked(false)
                             }
+                        }
 
+                        if (nodeTypes[node].name == targetNodeName) {
                             if (path) {
                                 link.setColor(nodeTypes[node].lineColor);
                             }
