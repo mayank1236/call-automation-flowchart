@@ -6,27 +6,21 @@ export interface DeleteLabelOptions extends BaseModelOptions {
 }
 
 export class DeleteLabelModel extends LabelModel {
-    // value;
 
     constructor(options: DeleteLabelOptions = {}) {
         super({
             ...options,
             type: 'editable-label'
         });
-        // if (options.value != undefined) {
-        //     this.value = options.value || '';
-        // }
     }
 
     serialize() {
         return {
             ...super.serialize(),
-            // value: this.value,
         };
     }
 
     deserialize(event: DeserializeEvent<this>): void {
         super.deserialize(event);
-        // this.value = event.data.value;
     }
 }

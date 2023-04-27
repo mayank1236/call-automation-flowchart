@@ -157,6 +157,7 @@ model.registerListener({
             const sPortLinks = sourcePort.getLinks();
             const sourceNodeName = document.querySelector(`[data-nodeid="${sourcePort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
             const maxLinks = 10;
+            link.addLabel(new DeleteLabelModel());
             e.link.registerListener({
                 targetPortChanged: (event: any) => {
                     const targetPort = link.getTargetPort() as DefaultPortModel;
@@ -173,12 +174,6 @@ model.registerListener({
                             }
                         });
                     }
-
-                    function deleteLink(targetLink: string) {
-                        sourcePort.setLocked(false);
-                        link.remove();
-                    }
-                    link.addLabel(new DeleteLabelModel());
 
                     link.setLocked(true);
                     if (sourceNodeName == 'Inbound Call' && Object.keys(sPortLinks).length >= 1) {
@@ -212,18 +207,21 @@ model.registerListener({
                             tPortLinks[l].remove();
                         }
                     });
-
+                    engine.repaintCanvas();
                 },
                 entityRemoved: (e: any) => {
-                    if (maxLinks && sourceNodeName == "Menu" && maxLinks > 1) {
+                    if (sourceNodeName == "Menu") {
                         Object.keys(sPortLinks).forEach((l, i) => {
-                            if (sPortLinks[l].getLabels().length == 1) {
-                                sPortLinks[l].getLabels().forEach(lab => {
-                                    (lab as DefaultLabelModel).setLabel(`${i}`);
+                            if (sPortLinks[l].getLabels().length == 2) {
+                                sPortLinks[l].getLabels().forEach((lab, index) => {
+                                    if (index == 1) {
+                                        (lab as DefaultLabelModel).setLabel(`${i}`);
+                                    }
                                 })
                             }
                         })
                     }
+                    engine.repaintCanvas();
                 },
             })
         }
