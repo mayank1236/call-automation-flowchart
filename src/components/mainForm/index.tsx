@@ -1,9 +1,12 @@
 import React, { useContext, useEffect } from 'react'
-import { NodeContext } from '../../context/node';
+
+import yaml from 'js-yaml';
 
 import './style.css';
-import useLocalStorage from '../../hooks/localStorage';
+import { NodeContext } from '../../context/node';
 import { FormContext } from '../../context/form';
+import useLocalStorage from '../../hooks/localStorage';
+
 
 const MainForm = () => {
   const [mod, setMod] = useLocalStorage('modelState', {});
@@ -36,7 +39,8 @@ const MainForm = () => {
   const handleDraft = (e: any) => {
     e.preventDefault();
     model.setZoomLevel(100);
-    setMod(model.serialize());
+    const serialized = model.serialize()
+    setMod(serialized);
     setFormState(form);
   }
   // iterate over all the nodes in the diagram model

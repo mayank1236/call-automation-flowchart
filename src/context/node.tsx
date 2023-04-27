@@ -9,6 +9,11 @@ import createEngine, {
     LabelModel,
 } from '@projectstorm/react-diagrams';
 
+import yaml from 'js-yaml'
+
+import { DeleteLabelFatory } from "../models/label/DeleteLabelFactory";
+import { DeleteLabelModel } from "../models/label/DeleteLabelModel";
+
 interface Props {
     children?: ReactNode
     // any props that come into the component
@@ -116,11 +121,20 @@ export const nodeTypes: nodeTypesObj = {
 const engine = createEngine({
     registerDefaultDeleteItemsAction: false
 });
+
+engine.maxNumberPointsPerLink = 0;
+engine.getLabelFactories().registerFactory(new DeleteLabelFatory());
+
+const state = engine.getStateMachine().getCurrentState();
+if (state instanceof DefaultDiagramState) {
+    state.dragNewLink.config.allowLooseLinks = false;
+}
 const model = new DiagramModel();
 const draftModel = localStorage.getItem('modelState');
 
 if (draftModel) {
-    model.deserializeModel(JSON.parse(draftModel), engine);
+    const loading = JSON.parse(draftModel);
+    model.deserializeModel(loading, engine);
     localStorage.removeItem('modelState');
 }
 
@@ -134,14 +148,6 @@ mainNode
     .setMaximumLinks(1);
 
 const nodeState = model.getNodes().length >= 1 ? model.getNodes() : [mainNode];
-
-
-engine.maxNumberPointsPerLink = 0;
-
-const state = engine.getStateMachine().getCurrentState();
-if (state instanceof DefaultDiagramState) {
-    state.dragNewLink.config.allowLooseLinks = false;
-}
 
 model.registerListener({
     linksUpdated: (e: any) => {
@@ -158,14 +164,21 @@ model.registerListener({
                     const path = document.querySelector(`[data-linkid="${link.getOptions().id}"]`)?.querySelectorAll("path");
                     const targetNodeName = document.querySelector(`[data-nodeid="${targetPort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
 
+
                     // Assing label to Menu links
                     if (sourceNodeName == "Menu" && 'On Key Press' == sourcePort.getOptions().name) {
                         Object.keys(sPortLinks).forEach((l, i) => {
-                            if (sPortLinks[l].getLabels().length < 1) {
+                            if (sPortLinks[l].getLabels().length < 2) {
                                 sPortLinks[l].addLabel(new DefaultLabelModel({ label: `${i}` }));
                             }
                         });
                     }
+
+                    function deleteLink(targetLink: string) {
+                        sourcePort.setLocked(false);
+                        link.remove();
+                    }
+                    link.addLabel(new DeleteLabelModel());
 
                     link.setLocked(true);
                     if (sourceNodeName == 'Inbound Call' && Object.keys(sPortLinks).length >= 1) {
@@ -212,12 +225,9 @@ model.registerListener({
                         })
                     }
                 },
-                // eventDidFire: (e: any)
             })
         }
-
     },
-    // eventDidFire: (e: any)
 });
 
 function NodeProvider({ children }: Props) {

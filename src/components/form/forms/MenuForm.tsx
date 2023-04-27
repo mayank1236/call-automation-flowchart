@@ -55,8 +55,14 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
     }, [toggle]);
 
     if (!menuNode) {
-        nodeObj.nodes.forEach((node: any) => {
+        nodeObj.nodes.forEach((node: DefaultNodeModel) => {
             if (node.getOptions().id == nodeId) {
+                nodeObj.model.registerListener({
+                    linksUpdated: (e: any) => {
+                        // console.log('wokring???')
+                        formObj.closeForm();
+                    }
+                })
                 setMenuNode(node);
             }
         });

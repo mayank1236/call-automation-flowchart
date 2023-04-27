@@ -69,6 +69,10 @@
     background: #17191e;
 }
 
+.css-157va7r:has(.delete-label) {
+    position: relative;
+}
+
 /* In Port Styling */
 .css-14ytlrw,
 .css-14ytlrw .css-18bh293:first-child,
