@@ -37,7 +37,6 @@ const HoursForm = ({ formObj, nodeObj }: { formObj: any, nodeObj?: any }) => {
         }
         start && duration && setStackId(Object.keys(start).length);
         setBreakState(breakState => {
-            console.log(breakState)
             return { ...breakState, [day]: !breakState[day] }
         });
     }
