@@ -12,7 +12,6 @@ export const DeleteLabelWidget: React.FunctionComponent<FlowAliasLabelWidgetProp
     const deleteLink = (e: any) => {
         e.preventDefault();
         const link = Object.values(props.model)[Object.values(props.model).length - 1];
-        // console.log(link)
         if (link) {
             link.getSourcePort().setLocked(false);
             link.remove();
