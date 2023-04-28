@@ -1,9 +1,11 @@
 import React, { SyntheticEvent, useEffect, useState, useRef } from 'react'
 
-const MainField = ({ name, inputType, formObj }: {
+const MainField = ({ name, inputType, formObj, label, obj }: {
   name: string;
   inputType: any;
   formObj: any;
+  label?: string;
+  obj?: number
 }) => {
   const inputName = name.toLowerCase();
   const nodeId = formObj?.formIsOpen;
@@ -19,6 +21,9 @@ const MainField = ({ name, inputType, formObj }: {
       let targetValue = e.target.value;
       if (inputType == 'file') {
         targetValue = e.target.files[0];
+      }
+      if (obj != undefined) {
+        return { ...prev, [nodeId]: { ...prev[nodeId], [inputName]: { ...prev[nodeId][inputName], [obj]: targetValue } } }
       }
       return { ...prev, [nodeId]: { ...prev[nodeId], [inputName]: targetValue } }
     });
@@ -49,8 +54,15 @@ const MainField = ({ name, inputType, formObj }: {
       break;
 
     default:
-      component = (<input
-        value={formObj?.forms[nodeId][inputName] || ''}
+      component = (obj != undefined) ? (
+        <input
+          value={formObj?.forms[nodeId][inputName] ? formObj?.forms[nodeId][inputName][obj] : '00:00'}
+          onChange={handleValue}
+          type={inputType}
+          style={{ background: "green" }}
+        />
+      ) : (<input
+        value={(formObj?.forms[nodeId][inputName] || '')}
         onChange={handleValue}
         type={inputType}
       />);
@@ -59,7 +71,7 @@ const MainField = ({ name, inputType, formObj }: {
 
   return (
     <div className="field-container">
-      <label className="name">{name}</label>
+      <label className="name">{label ? label : name}</label>
       <div className="field">
         {component}
       </div>

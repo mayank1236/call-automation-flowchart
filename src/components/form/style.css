@@ -179,3 +179,36 @@
 .field:has(input[type="file"]) {
     padding-bottom: 0;
 }
+
+.hours-input button {
+    border-color: green;
+    background: none;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.hours-input button:hover {
+    background-color: green;
+}
+
+label.hours-label {
+    margin-bottom: 20px;
+    padding: 15px 10px;
+    border-bottom: 1px solid white;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hours-label .toggle-switch {
+    display: flex;
+    margin-bottom: 0;
+    align-items: center;
+    gap: 10px;
+}
+
+.hours-label .field-container,
+.hours-label .field {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
