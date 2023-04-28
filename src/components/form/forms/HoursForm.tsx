@@ -31,12 +31,13 @@ const HoursForm = ({ formObj, nodeObj }: { formObj: any, nodeObj?: any }) => {
     const addBreak = (day: string) => {
         let start = formObj?.forms[nodeId][`${day} start time`];
         let duration = formObj?.forms[nodeId][`${day} duration`];
-        if (day = 'sunday') {
+        if (day == 'sunday') {
             start = formObj?.forms[nodeId][`start time`];
             duration = formObj?.forms[nodeId][`duration`];
         }
         start && duration && setStackId(Object.keys(start).length);
         setBreakState(breakState => {
+            console.log(breakState)
             return { ...breakState, [day]: !breakState[day] }
         });
     }
