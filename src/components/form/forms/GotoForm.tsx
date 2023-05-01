@@ -3,7 +3,7 @@ import MainField from '../formComponents/mainField'
 import SelectField from '../formComponents/selectField'
 
 const GotoForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
-    const options = nodeObj?.nodes.map((node: any) => node.getOptions().name)
+    const options = nodeObj?.nodes.map((node: any) => `${node.getOptions().name} ${node.getOptions().id}`)
     return (
         <>
             <MainField formObj={formObj} name="Node Name" inputType="text" />

@@ -15,9 +15,9 @@ window.addEventListener('beforeunload', (event) => {
 });
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <NodeProvider>
-    <FormProvider>
+  <FormProvider>
+    <NodeProvider>
       <App />
-    </FormProvider>
-  </NodeProvider>
+    </NodeProvider>
+  </FormProvider>
 )

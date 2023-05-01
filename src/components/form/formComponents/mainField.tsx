@@ -56,7 +56,7 @@ const MainField = ({ name, inputType, formObj, label, obj }: {
     default:
       component = (obj != undefined) ? (
         <input
-          value={formObj?.forms[nodeId][inputName] ? formObj?.forms[nodeId][inputName][obj] : '00:00'}
+          value={formObj?.forms[nodeId][inputName] ? formObj?.forms[nodeId][inputName][obj] : ''}
           onChange={handleValue}
           type={inputType}
           style={{ background: "green" }}

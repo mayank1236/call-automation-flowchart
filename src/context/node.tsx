@@ -13,6 +13,7 @@ import yaml from 'js-yaml'
 
 import { DeleteLabelFatory } from "../models/label/DeleteLabelFactory";
 import { DeleteLabelModel } from "../models/label/DeleteLabelModel";
+import { FormContext } from "./form";
 
 interface Props {
     children?: ReactNode
@@ -149,90 +150,119 @@ mainNode
 
 const nodeState = model.getNodes().length >= 1 ? model.getNodes() : [mainNode];
 
-model.registerListener({
-    linksUpdated: (e: any) => {
-        if (e.isCreated) {
-            const link: DefaultLinkModel = e.link;
-            const sourcePort = link.getSourcePort() as DefaultPortModel;
-            const sPortLinks = sourcePort.getLinks();
-            const sourceNodeName = document.querySelector(`[data-nodeid="${sourcePort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
-            const maxLinks = 10;
-            link.addLabel(new DeleteLabelModel());
-            e.link.registerListener({
-                targetPortChanged: (event: any) => {
-                    const targetPort = link.getTargetPort() as DefaultPortModel;
-                    const tPortLinks = targetPort.getLinks();
-                    const path = document.querySelector(`[data-linkid="${link.getOptions().id}"]`)?.querySelectorAll("path");
-                    const targetNodeName = document.querySelector(`[data-nodeid="${targetPort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
 
-
-                    // Assing label to Menu links
-                    if (sourceNodeName == "Menu" && 'On Key Press' == sourcePort.getOptions().name) {
-                        Object.keys(sPortLinks).forEach((l, i) => {
-                            if (sPortLinks[l].getLabels().length < 2) {
-                                sPortLinks[l].addLabel(new DefaultLabelModel({ label: `${i}` }));
-                            }
-                        });
-                    }
-
-                    link.setLocked(true);
-                    if (sourceNodeName == 'Inbound Call' && Object.keys(sPortLinks).length >= 1) {
-                        sourcePort.setLocked(true);
-                    }
-
-                    // Assign labels color
-                    Object.keys(nodeTypes).forEach(node => {
-                        if (nodeTypes[node].name == sourceNodeName) {
-                            if (
-                                nodeTypes[node]['out'] != 0
-                                && (Object.keys(sPortLinks).length >= nodeTypes[node]['out'][sourcePort.getOptions().name])
-                            ) {
-                                sourcePort.setLocked(true);
-                            } else if (nodeTypes[node]['out'][sourcePort.getOptions().name] == 'any') {
-                                sourcePort.setLocked(false)
-                            }
-                        }
-
-                        if (nodeTypes[node].name == targetNodeName) {
-                            if (path) {
-                                link.setColor(nodeTypes[node].lineColor);
-                            }
-                        }
-                    });
-
-                    Object.keys(tPortLinks).forEach(l => {
-                        if (`${link.getOptions().id}` != l) {
-                            tPortLinks[l].setLocked(false);
-                            tPortLinks[l].getSourcePort().setLocked(false);
-                            tPortLinks[l].remove();
-                        }
-                    });
-                    engine.repaintCanvas();
-                },
-                entityRemoved: (e: any) => {
-                    if (sourceNodeName == "Menu") {
-                        Object.keys(sPortLinks).forEach((l, i) => {
-                            if (sPortLinks[l].getLabels().length == 2) {
-                                sPortLinks[l].getLabels().forEach((lab, index) => {
-                                    if (index == 1) {
-                                        (lab as DefaultLabelModel).setLabel(`${i}`);
-                                    }
-                                })
-                            }
-                        })
-                    }
-                    engine.repaintCanvas();
-                },
-            })
-        }
-    },
-});
 
 function NodeProvider({ children }: Props) {
     // The Flowchart Engine (Globally declared)
 
     const [nodes, setNodes] = useState([...nodeState]);
-    var [id, setId] = useState<number>(0);
+    const formObj = useContext(FormContext);
+
+    // Event listener for Links
+    useEffect(() => {
+        model.registerListener({
+            linksUpdated: (e: any) => {
+                if (e.isCreated) {
+                    const link: DefaultLinkModel = e.link;
+                    const sourcePort = link.getSourcePort() as DefaultPortModel;
+                    const sPortLinks = sourcePort.getLinks();
+                    const sourceNodeName = document.querySelector(`[data-nodeid="${sourcePort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
+                    if (link.getLabels().length < 1 && sourceNodeName != "Menu") {
+                        link.addLabel(new DeleteLabelModel({ formObj }));
+                    } else if (link.getLabels().length < 1 && sourceNodeName == "Menu") {
+                        link.addLabel(new DeleteLabelModel({ formObj }));
+                    }
+                    e.link.registerListener({
+                        targetPortChanged: (event: any) => {
+                            const targetPort = link.getTargetPort() as DefaultPortModel;
+                            const tPortLinks = targetPort.getLinks();
+                            const path = document.querySelector(`[data-linkid="${link.getOptions().id}"]`)?.querySelectorAll("path");
+                            const targetNodeName = document.querySelector(`[data-nodeid="${targetPort.getNode().getOptions().id}"] div`)?.getAttribute("data-default-node-name");
+
+                            // close the form on new connection
+                            formObj?.closeForm();
+                            // updating Forms
+                            formObj?.updateForm(prev => {
+                                const newForm: { [key: string]: any } = { ...prev };
+                                const theNode = sourcePort.getNode() as DefaultNodeModel;
+                                const to = targetPort.getNode().getOptions().id;
+                                const id = theNode.getOptions().id;
+                                const portName = sourcePort.getOptions().name;
+                                if (id) {
+                                    if (portName == 'On Key Press' || portName == 'Routes') {
+                                        const manyTo = Object.values(theNode.getOutPorts()[0].getLinks()).map(newLink => {
+                                            return newLink.getTargetPort().getNode().getOptions().id;
+                                        })
+                                        newForm[id] = { ...newForm[id], [portName]: manyTo }
+                                    } else {
+                                        newForm[id] = { ...newForm[id], next: to }
+                                    }
+                                }
+                                return newForm;
+                            });
+
+                            // Assing label to Menu links
+                            if (sourceNodeName == "Menu" && 'On Key Press' == sourcePort.getOptions().name) {
+                                Object.keys(sPortLinks).forEach((l, i) => {
+                                    if (sPortLinks[l].getLabels().length < 2) {
+                                        sPortLinks[l].addLabel(new DefaultLabelModel({ label: `${i}` }));
+                                    }
+                                });
+                            }
+
+                            link.setLocked(true);
+                            if (sourceNodeName == 'Inbound Call' && Object.keys(sPortLinks).length >= 1) {
+                                sourcePort.setLocked(true);
+                            }
+
+                            // Assign labels color
+                            Object.keys(nodeTypes).forEach(node => {
+                                if (nodeTypes[node].name == sourceNodeName) {
+                                    if (
+                                        nodeTypes[node]['out'] != 0
+                                        && (Object.keys(sPortLinks).length >= nodeTypes[node]['out'][sourcePort.getOptions().name])
+                                    ) {
+                                        sourcePort.setLocked(true);
+                                    } else if (nodeTypes[node]['out'][sourcePort.getOptions().name] == 'any') {
+                                        sourcePort.setLocked(false)
+                                    }
+                                }
+
+                                if (nodeTypes[node].name == targetNodeName) {
+                                    if (path) {
+                                        link.setColor(nodeTypes[node].lineColor);
+                                    }
+                                }
+                            });
+
+                            Object.keys(tPortLinks).forEach(l => {
+                                if (`${link.getOptions().id}` != l) {
+                                    tPortLinks[l].setLocked(false);
+                                    tPortLinks[l].getSourcePort().setLocked(false);
+                                    tPortLinks[l].remove();
+                                }
+                            });
+                            engine.repaintCanvas();
+                        },
+                        entityRemoved: (e: any) => {
+                            if (sourceNodeName == "Menu") {
+                                Object.keys(sPortLinks).forEach((l, i) => {
+                                    if (sPortLinks[l].getLabels().length == 2) {
+                                        sPortLinks[l].getLabels().forEach((lab, index) => {
+                                            if (index == 1) {
+                                                (lab as DefaultLabelModel).setLabel(`${i}`);
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                            engine.repaintCanvas();
+                        },
+                    })
+                }
+            },
+        });
+    }, [])
 
     const contextValue = {
         engine,
@@ -244,7 +274,6 @@ function NodeProvider({ children }: Props) {
 
     function create(type: string) {
         let node = { ...nodeTypes[type] };
-        node['id'] = id;
         const n = new DefaultNodeModel({
             name: node.name,
             color: '#050506',
@@ -270,10 +299,22 @@ function NodeProvider({ children }: Props) {
         const nodePos = allNodes[allNodes.length - 1].getPosition();
         n.setPosition(nodePos.x + 250, nodePos.y);
 
+        // Initialize && updating Forms
+        formObj?.updateForm(prev => {
+            const i = n.getOptions().id;
+            const newForm: { [key: string]: any } = { ...prev }
+            if (i) {
+                const exists = Object.keys(prev).includes(i);
+                if (!exists) {
+                    newForm[i] = { name: node.name };
+                }
+            }
+            return newForm;
+        });
+
         setNodes((nodes: any) => {
             return [...nodes, n];
         });
-        setId(id => id + 1);
     }
 
     function remove(type: string) {

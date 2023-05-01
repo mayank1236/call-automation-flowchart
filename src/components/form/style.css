@@ -181,13 +181,18 @@
 }
 
 .hours-input button {
-    border-color: green;
-    background: none;
-    width: 100%;
     margin-bottom: 25px;
 }
 
-.hours-input button:hover {
+.hours-input button,
+.router-filter .green-btn {
+    border-color: green;
+    background: none;
+    width: 100%;
+}
+
+.hours-input button:hover,
+.router-filter .green-btn:hover {
     background-color: green;
 }
 

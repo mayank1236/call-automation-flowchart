@@ -32,16 +32,6 @@ function FormProvider({ children }: Props) {
     }, [forms])
 
     const openForm = (i: string) => {
-        // Initialize && updating Forms
-        setForms(prev => {
-            const exists = Object.keys(prev).includes(i);
-            const newForm = { ...prev }
-            if (!exists) {
-                newForm[i] = {};
-            }
-            return newForm;
-        });
-
         setFormIsOpen((prev: string) => {
             if (prev == i) {
                 return '';

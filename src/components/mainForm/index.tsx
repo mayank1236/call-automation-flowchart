@@ -1,7 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 
-import yaml from 'js-yaml';
-
 import './style.css';
 import { NodeContext } from '../../context/node';
 import { FormContext } from '../../context/form';

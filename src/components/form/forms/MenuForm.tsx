@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import MainField from '../formComponents/mainField'
 import RecordingSection from '../formComponents/recordingSection'
 import NodeButton from '../../nodeButton';
@@ -7,18 +7,26 @@ import { DefaultLabelModel, DefaultLinkModel, DefaultNodeModel } from '@projects
 const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
     const [btnListClicked, setBtnListClicked] = useState(false);
     const [toggle, setToggle] = useState(false);
-
-    const nodeId = formObj.formIsOpen;
-    const [menuNode, setMenuNode] = useState<DefaultNodeModel>();
+    const toggleButtonListRef = useRef(null);
+    const nodeId = formObj?.formIsOpen;
+    const [menuNode, setMenuNode] = useState<DefaultNodeModel | undefined>(() => {
+        const n = nodeObj.nodes.filter((node: DefaultNodeModel) => {
+            if (node.getOptions().id == nodeId && node.getOptions().name == 'Menu') {
+                return true;
+            }
+            return false;
+        });
+        return n[0];
+    });
 
 
     useEffect(() => {
-        document.querySelectorAll('.toggle-button-list .btn-container button').forEach((button) => {
+        toggleButtonListRef.current && (toggleButtonListRef.current as HTMLElement).querySelectorAll('.btn-container button').forEach((button) => {
             button.addEventListener('click', createLink);
         });
 
         return () => {
-            document.querySelectorAll('.toggle-button-list .btn-container button').forEach((button) => {
+            toggleButtonListRef.current && (toggleButtonListRef.current as HTMLElement).querySelectorAll('.btn-container button').forEach((button) => {
                 button.removeEventListener('click', createLink);
             });
         }
@@ -26,10 +34,13 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
 
     useEffect(() => {
         if (btnListClicked && menuNode) {
+            console.log('this isn"t running?')
             const newLink = new DefaultLinkModel();
             const src = menuNode?.getOutPorts()[0];
             const target = nodeObj.nodes[nodeObj.nodes.length - 1].getInPorts()[0];
-            // if (menuNode?.getOptions().id != nodeObj.nodes[nodeObj.nodes.lenght - 1]?.getOptions().id) {
+
+            console.log((src.getNode() as DefaultNodeModel).getOptions().name, (target.getNode() as DefaultNodeModel).getOptions().name)
+
             src && newLink.setSourcePort(src);
             target && newLink.setTargetPort(target);
 
@@ -37,30 +48,13 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
             newLink.fireEvent({ targetPort: target }, 'targetPortChanged');
             setBtnListClicked(false);
         }
-
-        menuNode && formObj?.updateForm((prev: any) => {
-            let targetValue: { [key: string]: any } = {};
-
-            Object.values(menuNode.getOutPorts()[0].getLinks()).forEach((route, index) => {
-                targetValue[index] = (route.getTargetPort().getNode() as DefaultNodeModel).getOptions().id;
-            });
-
-            return { ...prev, [nodeId]: { ...prev[nodeId], ['menuRoutes']: targetValue } }
-        });
-
     }, [nodeObj.nodes]);
 
     useEffect(() => {
-        (document.querySelector('.toggle-button-list .btn-container') as HTMLElement).style.display = toggle ? 'block' : 'none';
+        if (toggleButtonListRef.current) {
+            ((toggleButtonListRef.current as HTMLElement).querySelector('.btn-container') as HTMLElement).style.display = toggle ? 'block' : 'none';
+        }
     }, [toggle]);
-
-    if (!menuNode) {
-        nodeObj.nodes.forEach((node: DefaultNodeModel) => {
-            if (node.getOptions().id == nodeId) {
-                setMenuNode(node);
-            }
-        });
-    }
 
     function createLink(e: any) {
         setToggle(false);
@@ -87,17 +81,18 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
                         width: "100%"
                     }}
                 >Menu Routes</label>
-                <div className="toggle-button-list">
+                <div className="toggle-button-list" ref={toggleButtonListRef}>
                     <button
                         onClick={handleClick}
-                        disabled={menuNode && (Object.keys(menuNode.getOutPorts()[0].getLinks()).length > 9)}
+                        disabled={(formObj.forms[nodeId]['On Key Press'] && formObj.forms[nodeId]['On Key Press'].length > 9)}
                         className="btn"
                         type="button"
                     >Add Route </button>
                     <NodeButton />
                 </div>
                 {
-                    menuNode && Object.values(menuNode.getOutPorts()[0].getLinks()).map((route, index) => {
+                    // menuNode && Object.values(menuNode.getOutPorts()[0].getLinks())
+                    formObj.forms[nodeId]['On Key Press'] && formObj.forms[nodeId]['On Key Press'].map((route: string, index: number) => {
                         return (
                             <div key={index} className="field-container">
                                 <div className="field" style={{
@@ -112,7 +107,7 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
                                         Press
                                         <span style={{ marginLeft: "5px", fontSize: "15px" }}>{index}</span>
                                         <span style={{ marginLeft: "20px", fontSize: "15px" }}>
-                                            {(route.getTargetPort().getNode() as DefaultNodeModel).getOptions().name}
+                                            {formObj.forms[route].name}
                                         </span>
                                     </label>
                                 </div>

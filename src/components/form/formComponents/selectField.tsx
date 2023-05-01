@@ -1,9 +1,10 @@
 import React from 'react'
 
-const SelectField = ({ name, options, formObj }: {
+const SelectField = ({ name, options, formObj, label }: {
     name: string;
     options: any[];
     formObj: any;
+    label?: string;
 }) => {
     const inputName = name.toLowerCase();
     const nodeId = formObj?.formIsOpen;
@@ -16,11 +17,11 @@ const SelectField = ({ name, options, formObj }: {
     }
     return (
         <div className="field-container">
-            <label className="name" htmlFor={name}>{name}</label>
+            <label className="name" htmlFor={`${nodeId}-${name}`}>{label ? label : name}</label>
             <div className="field">
                 <select
                     name={name}
-                    id={name}
+                    id={`${nodeId}-${name}`}
                     defaultValue={options[0]}
                     onChange={handleValue}
                 >
