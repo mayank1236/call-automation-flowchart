@@ -5,10 +5,6 @@ import { NodeContext } from '../../context/node';
 import { FormContext } from '../../context/form';
 import useLocalStorage from '../../hooks/localStorage';
 
-// const requirements = {
-
-// }
-
 const MainForm = () => {
   const [mod, setMod] = useLocalStorage('modelState', {});
   const [formState, setFormState] = useLocalStorage('formState', {});
@@ -63,16 +59,18 @@ const MainForm = () => {
   return (
     <div className="mainform-container">
       <span>Call Flows</span>
-      {
-        disabled?.includes(false) ?
-          (<p style={{ color: '#dc3545', fontSize: "14px" }}>📌 One or more Nodes failed validation</p>) : (<></>)
-      }
-      <div className="form">
-        <form>
-          <input />
-          <button onClick={handleDraft} type="button">Save Draft</button>
-          <button onClick={handlePublish} className="mainBtn" disabled={disabled?.includes(false)} type="button">Publish</button>
-        </form>
+      <div style={{ display: "flex", alignItems: "center", gap: "30px" }}>
+        {
+          disabled?.includes(false) ?
+            (<p style={{ color: '#dc3545', fontSize: "14px" }}>📌 One or more Nodes failed validation</p>) : (<></>)
+        }
+        <div className="form">
+          <form>
+            <input />
+            <button onClick={handleDraft} type="button">Save Draft</button>
+            <button onClick={handlePublish} className="mainBtn" disabled={disabled?.includes(false)} type="button">Publish</button>
+          </form>
+        </div>
       </div>
     </div>
   )
