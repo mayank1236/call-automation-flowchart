@@ -10,6 +10,15 @@
     display: -webkit-flex;
 }
 
+.mainBtn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.mainBtn:disabled:hover {
+    filter: none;
+}
+
 .mainform-container span {
     display: inline-block;
     position: relative;
@@ -24,10 +33,10 @@
     background-color: #3858e7;
     border-color: #3858e7;
     min-height: 33px;
-    margin: 0!important;
+    margin: 0 !important;
 }
 
-.mainform-container  button:hover {
+.mainform-container button:hover {
     filter: brightness(.88);
 }
 
@@ -36,7 +45,7 @@
     gap: 10px;
 }
 
-.mainform-container .form input{
+.mainform-container .form input {
     background: #252b45;
     border-bottom-color: transparent;
     border-right-color: transparent;

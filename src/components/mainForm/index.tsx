@@ -5,6 +5,9 @@ import { NodeContext } from '../../context/node';
 import { FormContext } from '../../context/form';
 import useLocalStorage from '../../hooks/localStorage';
 
+// const requirements = {
+
+// }
 
 const MainForm = () => {
   const [mod, setMod] = useLocalStorage('modelState', {});
@@ -14,24 +17,37 @@ const MainForm = () => {
   const model = nodeObj?.model;
 
   const formObj = useContext(FormContext);
-  const form = formObj?.forms;
+  const form: { [key: string]: any } | undefined = formObj?.forms;
+  const disabled = form && nodeObj && Object.values(nodeObj.nodes).map((val: any, index: number, arr: any) => {
+    let key = val.getOptions().id;
+    if (index == 0) {
+      if (form[key] != undefined && form[key]['next'].length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (index + 1 != arr.length) {
+        if ((form[key]['next'] != undefined || form[key]["On Key Press"] != undefined || form[key]["Routes"] != undefined)
+          &&
+          (form[key]['next'].length > 0 || (form[key]["On Key Press"] && form[key]["On Key Press"].length > 0) || (form[key]["Routes"] && form[key]["Routes"].length > 0))) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+  });
+
 
   const handlePublish = (e: any) => {
     e.preventDefault();
 
-    model.getNodes().forEach((node: any) => {
-      // iterate over all the in and out ports of the node
-      Object.values(node.getPorts()).forEach((port: any) => {
-        // get all the links that are connected to the port
-        const links = port.getLinks();
-        // iterate over all the links and fetch the nodes that are connected to each other
-        Object.values(links).forEach((link: any) => {
-          const sourceNode = link.getSourcePort().getNode();
-          const targetNode = link.getTargetPort().getNode();
-          console.log(`${sourceNode.options.name} is connected to ${targetNode.options.name}`);
-        });
-      });
-    });
+    model.setZoomLevel(100);
+    const serialized = model.serialize();
+    console.log(serialized, form)
   }
 
   const handleDraft = (e: any) => {
@@ -47,11 +63,15 @@ const MainForm = () => {
   return (
     <div className="mainform-container">
       <span>Call Flows</span>
+      {
+        disabled?.includes(false) ?
+          (<p style={{ color: '#dc3545', fontSize: "14px" }}>📌 One or more Nodes failed validation</p>) : (<></>)
+      }
       <div className="form">
         <form>
           <input />
           <button onClick={handleDraft} type="button">Save Draft</button>
-          <button onClick={handlePublish} type="button">Publish</button>
+          <button onClick={handlePublish} className="mainBtn" disabled={disabled?.includes(false)} type="button">Publish</button>
         </form>
       </div>
     </div>

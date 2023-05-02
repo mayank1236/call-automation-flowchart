@@ -10,7 +10,7 @@ interface FormContextInterface {
     openForm: (i: string) => void;
     closeForm: () => void;
     updateForm: React.Dispatch<React.SetStateAction<{}>>;
-    forms: {};
+    forms: { [key: string]: any };
 }
 
 export const FormContext = createContext<FormContextInterface | null>(null);
