@@ -24,13 +24,22 @@ const MainForm = () => {
       }
     } else {
       if (index + 1 != arr.length) {
-        if ((form[key]['next'] != undefined || form[key]["On Key Press"] != undefined || form[key]["Routes"] != undefined)
-          &&
-          (form[key]['next'].length > 0 || (form[key]["On Key Press"] && form[key]["On Key Press"].length > 0) || (form[key]["Routes"] && form[key]["Routes"].length > 0))) {
+        if (form[key]['next'] && form[key]['next'].length > 0) {
           return true;
+        } else if (form[key]["On Key Press"] && form[key]["On Key Press"].length > 0) {
+          return true;
+        } else if (form[key]["Routes"] && form[key]["Routes"].length > 0) {
+          return true
         } else {
           return false;
         }
+        // if ((form[key]['next'] != undefined || form[key]["On Key Press"] != undefined || form[key]["Routes"] != undefined)
+        //   &&
+        //   ( || (form[key]["On Key Press"] && form[key]["On Key Press"].length > 0) || (form[key]["Routes"] && form[key]["Routes"].length > 0))) {
+        //   return true;
+        // } else {
+        //   return false;
+        // }
       } else {
         return true;
       }
