@@ -9,10 +9,12 @@ const RouterForm = ({ formObj, nodeObj }: { formObj: any, nodeObj?: any }) => {
     const conditions = ['contains', 'less than', 'equal to', 'exists'];
     const filterComp: (index: string, length?: number) => JSX.Element = ((index, length) => {
         return (<div>
-            {length && length > 0 ? <SelectField label={"type"} name={`${index} type ${length}`} formObj={formObj} options={['and', 'or']} /> : <></>}
-            <SelectField label={"select tag"} name={`${index} select ${length}`} options={tags} formObj={formObj} />
-            <SelectField label="condition" name={`${index} condition ${length}`} options={conditions} formObj={formObj} />
-            <MainField label={"value"} inputType="text" name={`${index} value ${length}`} formObj={formObj} />
+            {length && length > 0 ?
+                <SelectField label={"type"} name={`${index} type`} obj={length} formObj={formObj} options={['and', 'or']} />
+                : <></>}
+            <SelectField label={"select tag"} name={`${index} select`} obj={length} options={tags} formObj={formObj} />
+            <SelectField label="condition" name={`${index} condition`} obj={length} options={conditions} formObj={formObj} />
+            <MainField label={"value"} inputType="text" name={`${index} value`} obj={length} formObj={formObj} />
         </div>)
     });
 
@@ -102,7 +104,7 @@ const RouterForm = ({ formObj, nodeObj }: { formObj: any, nodeObj?: any }) => {
     }
 
     const addFilter = (i: string, route: any) => {
-        const length = route && route.length;
+        const length = route ? route.length : 0;
         setRoutes(routes => {
             const r = { ...routes };
             console.log(r)
