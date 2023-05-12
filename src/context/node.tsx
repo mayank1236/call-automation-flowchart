@@ -317,8 +317,11 @@ function NodeProvider({ children }: Props) {
         });
     }
 
-    function remove(type: string) {
-        return type
+    function remove(nodeid: string) {
+        formObj?.delete(nodeid);
+        const delNode = nodes.filter((node) => node.getOptions().id == nodeid)[0];
+        delNode.remove();
+        setNodes(nodes.filter((node) => node.getOptions().id !== nodeid))
     }
 
 

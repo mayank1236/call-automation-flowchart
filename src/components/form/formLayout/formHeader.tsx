@@ -22,7 +22,7 @@ const FormHeader = ({ closeForm, formObj, nodeObj }: { closeForm: any, formObj: 
         // TO delete the node
         // and the form and form data
         // from there respective contexts
-
+        nodeObj.remove(nodeId)
     };
     const handleClose = () => {
         closeForm();

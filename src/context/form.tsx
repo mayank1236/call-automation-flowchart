@@ -11,6 +11,7 @@ interface FormContextInterface {
     closeForm: () => void;
     updateForm: React.Dispatch<React.SetStateAction<{}>>;
     forms: { [key: string]: any };
+    delete: (arg: string) => any;
 }
 
 export const FormContext = createContext<FormContextInterface | null>(null);
@@ -27,10 +28,6 @@ function FormProvider({ children }: Props) {
     const [forms, setForms] = useState<{ [key: string]: any }>(initState)
     const [formIsOpen, setFormIsOpen] = useState<string>('');
 
-    useEffect(() => {
-        console.log(forms);
-    }, [forms])
-
     const openForm = (i: string) => {
         setFormIsOpen((prev: string) => {
             if (prev == i) {
@@ -44,12 +41,20 @@ function FormProvider({ children }: Props) {
         setFormIsOpen('');
     }
 
+    const delForm = (nodeid: string) => {
+        const duplicate = { ...forms };
+        delete duplicate[Object.keys(duplicate).filter(f => f == nodeid)[0]];
+        setForms(duplicate);
+        closeForm();
+    }
+
     const value = {
         formIsOpen: formIsOpen,
         openForm: openForm,
         closeForm: closeForm,
         updateForm: setForms,
-        forms: forms
+        forms: forms,
+        delete: delForm
     }
 
     return (
