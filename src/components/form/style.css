@@ -217,3 +217,16 @@ label.hours-label {
     margin-bottom: 0;
     padding-bottom: 0;
 }
+
+.tooltip {
+    padding: 10px;
+    background: white;
+    color: black;
+    position: absolute;
+    top: 50px;
+    display: none;
+}
+
+.form-name svg:hover+.tooltip {
+    display: block;
+}
