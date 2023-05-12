@@ -34,12 +34,9 @@ const MenuForm = ({ formObj, nodeObj }: { formObj: any, nodeObj: any }) => {
 
     useEffect(() => {
         if (btnListClicked && menuNode) {
-            console.log('this isn"t running?')
             const newLink = new DefaultLinkModel();
             const src = menuNode?.getOutPorts()[0];
             const target = nodeObj.nodes[nodeObj.nodes.length - 1].getInPorts()[0];
-
-            console.log((src.getNode() as DefaultNodeModel).getOptions().name, (target.getNode() as DefaultNodeModel).getOptions().name)
 
             src && newLink.setSourcePort(src);
             target && newLink.setTargetPort(target);

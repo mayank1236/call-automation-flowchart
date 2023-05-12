@@ -54,7 +54,6 @@ const MainField = ({ name, inputType, formObj, label, obj }: {
       break;
 
     default:
-      obj != undefined && formObj?.forms[nodeId][inputName] && console.log(formObj?.forms[nodeId][inputName][obj]);
       component = (obj != undefined) ? (
         <input
           value={formObj?.forms[nodeId][inputName] ? formObj?.forms[nodeId][inputName][obj] : ''}
